@@ -79,13 +79,18 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  <<: *default
-  database: live_music_calendar_production
-  url: <%= ENV["DATABASE_URL"] %>
-  
-  # Add cable configuration
-  cable:
-    adapter: postgresql
+  primary:
+    <<: *default
     url: <%= ENV["DATABASE_URL"] %>
-    database: live_music_calendar_production
-    pool: 5
+  cache:
+    <<: *default
+    url: <%= ENV["HEROKU_POSTGRESQL_BRONZE_URL"] || ENV["DATABASE_URL"] %>
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *default
+    url: <%= ENV["HEROKU_POSTGRESQL_SILVER_URL"] || ENV["DATABASE_URL"] %>
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *default
+    url: <%= ENV["HEROKU_POSTGRESQL_GOLD_URL"] || ENV["DATABASE_URL"] %>
+    migrations_paths: db/cable_migrate
