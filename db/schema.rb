@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_26_195411) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_29_144721) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -18,6 +18,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_26_195411) do
     t.string "name"
     t.string "photo_url"
     t.string "bio"
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+  end
+
+  create_table "bands_events", id: false, force: :cascade do |t|
+    t.bigint "event_id"
+    t.bigint "band_id"
+    t.index ["band_id"], name: "index_bands_events_on_band_id"
+    t.index ["event_id"], name: "index_bands_events_on_event_id"
   end
 
   create_table "events", force: :cascade do |t|
@@ -25,5 +34,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_26_195411) do
     t.datetime "date"
     t.string "venue"
     t.string "location"
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
   end
 end
