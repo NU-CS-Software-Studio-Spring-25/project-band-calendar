@@ -79,4 +79,13 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  adapter: postgresql
+  <<: *default
+  database: live_music_calendar_production
+  url: <%= ENV["DATABASE_URL"] %>
+  
+  # Add cable configuration
+  cable:
+    adapter: postgresql
+    url: <%= ENV["DATABASE_URL"] %>
+    database: live_music_calendar_production
+    pool: 5
