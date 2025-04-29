@@ -1,0 +1,20 @@
+<h1><%= @event.name %></h1>
+
+<p><strong>Date:</strong> <%= @event.date.strftime("%B %d, %Y") %></p>
+<p><strong>Venue:</strong> <%= @event.venue %></p>
+<p><strong>Location:</strong> <%= @event.location %></p>
+
+<h2>Lineup</h2>
+<% if @bands.any? %>
+  <ul>
+    <% @bands.each do |band| %>
+      <li>
+        <%= band.name %> - <%= band.bio %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No bands have been announced yet.</p>
+<% end %>
+
+<p><%= link_to "Back to all events", events_path %></p>

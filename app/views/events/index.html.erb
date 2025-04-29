@@ -1,0 +1,12 @@
+<h1>All Events</h1>
+
+<% @events.each do |event| %>
+  <div class="container">
+    <h2><%= link_to event.name, event_path(event) %></h2>
+    <p><%= event.date.strftime("%B %d, %Y") %></p>
+    <p><%= "#{event.venue}, #{event.location}" %></p>
+    <p>Featuring <%= event.bands.count %> bands</p>
+  </div>
+<% end %>
+
+<p><%= link_to "Add New Event", new_event_path %></p>
