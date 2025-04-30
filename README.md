@@ -32,4 +32,4 @@ Weekly calendar where you can see events (can go back/forward a day)
 - Time
 - Location
 ## Team Members
-Kevin Wang, Irving Peng, Ronghe Chen, Zhuoqaun Wang 
+Kevin Wang, Irving Peng, Ronghe Chen, Zhuoquan Wang 
