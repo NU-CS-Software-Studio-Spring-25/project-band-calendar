@@ -1,3 +1,31 @@
-<h1>Add New Event</h1>
+<div class="container mt-4">
+  <h1>Add New Event</h1>
 
-<p><%= link_to "Back to all events", events_path %></p>
+  <%= form_for @event, html: {class: "needs-validation"} do |f| %>
+    <div class="form-group mb-3">
+      <%= f.label :name, "Event Name" %>
+      <%= f.text_field :name, class: "form-control", placeholder: "Enter event name", required: true %>
+    </div>
+    
+    <div class="form-group mb-3">
+      <%= f.label :venue, "Venue" %>
+      <%= f.text_field :venue, class: "form-control", placeholder: "Enter venue name", required: true %>
+    </div>
+    
+    <div class="form-group mb-3">
+      <%= f.label :location, "Location" %>
+      <%= f.text_field :location, class: "form-control", placeholder: "Enter location", required: true %>
+    </div>
+    
+    <div class="form-group mb-3">
+      <%= f.label :date, "Date & Time" %>
+      <%= f.date_field :date, class: "form-control datetimepicker", placeholder: "Select date and time", required: true %>
+    </div>
+    
+    <div class="mt-4">
+      <%= f.submit "Create", class: "btn btn-primary" %>
+      <%= link_to "Cancel", events_path, class: "btn btn-secondary ms-2" %>
+    </div>
+  <% end %>
+</div>
+
