@@ -1,0 +1,49 @@
+<div class="container mt-4">
+  <h1>Edit Event</h1>
+
+  <%= form_for @event, html: {class: "needs-validation"} do |f| %>
+    <div class="form-group mb-3">
+      <%= f.label :name, "Event Name" %>
+      <%= f.text_field :name, class: "form-control", placeholder: "Enter event name", required: true %>
+    </div>
+    
+    <div class="form-group mb-3">
+      <%= f.label :venue, "Venue" %>
+      <%= f.text_field :venue, class: "form-control", placeholder: "Enter venue name", required: true %>
+    </div>
+    
+    <div class="form-group mb-3">
+      <%= f.label :location, "Location" %>
+      <%= f.text_field :location, class: "form-control", placeholder: "Enter location", required: true %>
+    </div>
+    
+    <div class="form-group mb-3">
+      <%= f.label :date, "Date & Time" %>
+      <%= f.date_field :date, class: "form-control datetimepicker", placeholder: "Select date and time", required: true %>
+    </div>
+    
+    <div class="form-group mb-4">
+      <label>Bands</label>
+      <div id="band-selection">
+        <% if @bands.any? %>
+          <div class="mb-3">
+            <% @bands.each do |band| %>
+              <div class="form-check">
+                <%= check_box_tag "event[band_ids][]", band.id, @event.bands.include?(band), class: "form-check-input" %>
+                <%= label_tag "event_band_ids_#{band.id}", band.name, class: "form-check-label" %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-muted">No bands available. Create a new band below.</p>
+        <% end %>
+      </div>
+      <%= link_to "Add New Band", new_band_path, class: "btn btn-sm btn-outline-success" %>
+    </div>
+    
+    <div class="mt-4">
+      <%= f.submit "Update", class: "btn btn-primary" %>
+      <%= link_to "Cancel", event_path(@event), class: "btn btn-secondary ms-2" %>
+    </div>
+  <% end %>
+</div> 
