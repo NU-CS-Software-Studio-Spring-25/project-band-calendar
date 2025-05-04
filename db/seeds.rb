@@ -8,14 +8,16 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-dillo_day = Event.create(
+# Create events
+puts "Creating events..."
+dillo_day = Event.create!(
   name: 'Dillo Day', 
   date: '2025-06-17', 
   venue: 'Northwestern Lakefill', 
   location: 'Evanston, IL'
 )
 
-lollapalooza = Event.create(
+lollapalooza = Event.create!(
   name: 'Lollapalooza', 
   date: '2025-08-01', 
   venue: 'Grant Park', 
@@ -23,27 +25,31 @@ lollapalooza = Event.create(
 )
 
 # Create Bands
-modest_mouse = Band.create(
+puts "Creating bands..."
+modest_mouse = Band.create!(
   name: 'Modest Mouse',
   photo_url: 'https://example.com/modest_mouse.jpg',
   bio: 'American rock band formed in 1992'
 )
 
-kendrick = Band.create(
+kendrick = Band.create!(
   name: 'Kendrick Lamar',
   photo_url: 'https://example.com/kendrick.jpg',
   bio: 'American rapper and songwriter'
 )
 
-tame_impala = Band.create(
+tame_impala = Band.create!(
   name: 'Tame Impala',
   photo_url: 'https://example.com/tame_impala.jpg',
   bio: 'Australian psychedelic music project'
 )
 
 # Associate bands with events
-dillo_day.bands << modest_mouse
-dillo_day.bands << tame_impala
+puts "Creating associations..."
+# Use direct SQL to insert associations
+ActiveRecord::Base.connection.execute("INSERT INTO bands_events (event_id, band_id) VALUES (#{dillo_day.id}, #{modest_mouse.id})")
+ActiveRecord::Base.connection.execute("INSERT INTO bands_events (event_id, band_id) VALUES (#{dillo_day.id}, #{tame_impala.id})")
+ActiveRecord::Base.connection.execute("INSERT INTO bands_events (event_id, band_id) VALUES (#{lollapalooza.id}, #{kendrick.id})")
+ActiveRecord::Base.connection.execute("INSERT INTO bands_events (event_id, band_id) VALUES (#{lollapalooza.id}, #{tame_impala.id})")
 
-lollapalooza.bands << kendrick
-lollapalooza.bands << tame_impala
+puts "Seeding completed!"
