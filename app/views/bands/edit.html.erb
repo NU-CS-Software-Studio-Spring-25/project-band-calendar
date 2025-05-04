@@ -1,0 +1,27 @@
+<div class="container mt-4">
+  <h1>Edit Band</h1>
+
+  <%= render 'shared/flash_messages' %>
+
+  <%= form_for @band, html: {class: "needs-validation"} do |f| %>
+    <div class="form-group mb-3">
+      <%= f.label :name, "Band Name" %>
+      <%= f.text_field :name, class: "form-control", placeholder: "Enter band name", required: true %>
+    </div>
+    
+    <div class="form-group mb-3">
+      <%= f.label :photo_url, "Photo URL" %>
+      <%= f.text_field :photo_url, class: "form-control", placeholder: "Enter photo URL (optional)" %>
+    </div>
+    
+    <div class="form-group mb-3">
+      <%= f.label :bio, "Biography" %>
+      <%= f.text_area :bio, class: "form-control", rows: 4, placeholder: "Enter band biography" %>
+    </div>
+    
+    <div class="mt-4">
+      <%= f.submit "Update", class: "btn btn-primary" %>
+      <%= link_to "Cancel", band_path(@band), class: "btn btn-secondary ms-2" %>
+    </div>
+  <% end %>
+</div> 

@@ -1,0 +1,28 @@
+<h1 class="text-center my-4">All Bands</h1>
+
+<div class="container">
+  <div class="row">
+    <% @bands.each do |band| %>
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+          <% if band.photo_url.present? %>
+            <img src="<%= band.photo_url %>" class="card-img-top" alt="<%= band.name %>">
+          <% end %>
+          <div class="card-body">
+            <h3 class="card-title">
+              <%= link_to band.name, band_path(band), class: "text-decoration-none text-dark" %>
+            </h3>
+            <p class="card-text"><%= truncate(band.bio, length: 100) %></p>
+            <p class="card-text text-muted">
+              <small>Playing at <%= pluralize(band.events.count, 'event') %></small>
+            </p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="text-center mt-4">
+    <%= link_to "Add New Band", new_band_path, class: "btn btn-outline-primary" %>
+  </div>
+</div> 

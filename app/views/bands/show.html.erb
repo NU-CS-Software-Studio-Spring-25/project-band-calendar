@@ -1,0 +1,45 @@
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-body">
+      <div class="row">
+        <% if @band.photo_url.present? %>
+          <div class="col-md-4">
+            <img src="<%= @band.photo_url %>" alt="<%= @band.name %>" class="img-fluid rounded">
+          </div>
+        <% end %>
+        
+        <div class="<%= @band.photo_url.present? ? 'col-md-8' : 'col-md-12' %>">
+          <h1 class="card-title mb-3"><%= @band.name %></h1>
+          <p class="lead"><%= @band.bio %></p>
+          
+          <div class="mt-4">
+            <h2>Upcoming Events</h2>
+            <% if @events.any? %>
+              <div class="list-group">
+                <% @events.each do |event| %>
+                  <%= link_to event_path(event), class: "list-group-item list-group-item-action" do %>
+                    <div class="d-flex w-100 justify-content-between">
+                      <h5 class="mb-1"><%= event.name %></h5>
+                      <small><%= event.date.strftime("%B %d, %Y") %></small>
+                    </div>
+                    <p class="mb-1"><%= "#{event.venue}, #{event.location}" %></p>
+                  <% end %>
+                <% end %>
+              </div>
+            <% else %>
+              <div class="alert alert-info">No upcoming events scheduled.</div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mt-4 btn-group">
+        <%= link_to "Back to all bands", bands_path, class: "btn btn-secondary" %>
+        <%= link_to "Edit Band", edit_band_path(@band), class: "btn btn-primary ms-2" %>
+        <%= button_to "Delete Band", band_path(@band), method: :delete, 
+            class: "btn btn-danger ms-2", 
+            data: { confirm: "Are you sure you want to delete this band?" } %>
+      </div>
+    </div>
+  </div>
+</div> 
