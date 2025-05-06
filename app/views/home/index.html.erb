@@ -1,0 +1,17 @@
+<h1>Welcome to Band Calendar</h1>
+<p>Your home for managing bands and events</p>
+
+<div class="auth-links">
+  <% if user_signed_in? %>
+    <p>Welcome, <%= current_user.email %></p>
+    <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "btn" %>
+  <% else %>
+    <%= link_to "Log in", new_user_session_path, class: "btn" %>
+    <%= link_to "Sign up", new_user_registration_path, class: "btn" %>
+  <% end %>
+</div>
+
+<div class="links">
+  <%= link_to "View Bands", bands_path, class: "btn" %>
+  <%= link_to "View Events", events_path, class: "btn" %>
+</div> 
