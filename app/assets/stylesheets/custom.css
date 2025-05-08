@@ -1,0 +1,124 @@
+body {
+    background: url('magicpattern-65O4Dw6-xLg-unsplash.jpg');
+    font-family: 'Questrial', 'Helvetica Neue', sans-serif;
+    color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+  }
+  
+  .auth-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: white;
+  }
+  
+  .custom-login-btn {
+    background-color: transparent;
+    border: 1px solid white;
+    color: white;
+    border-radius: 999px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .custom-login-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border-color: white;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+  }
+
+  .brand-offset {
+    margin-left: 12%;
+  }
+
+  .devise-links a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+  }
+  
+  .devise-links a:hover {
+    text-decoration: underline;
+  }
+
+  .nav-button {
+    background-color: transparent;
+    border: 1px solid white;
+    color: white !important;
+    border-radius: 999px;
+    padding: 6px 16px;
+    margin-left: 6px;
+    transition: background-color 0.3s, color 0.3s, border 0.3s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .nav-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white !important;
+    border-color: white;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+  }
+
+  .cancel-button {
+    background-color: transparent;
+    border: 1px solid white;
+    color: white !important;
+    border-radius: 999px;
+    padding: 6px 16px;
+    margin-left: 6px;
+    transition: background-color 0.3s, color 0.3s, border 0.3s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .cancel-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white !important;
+    border-color: white;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+  }
+
+  .welcome-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 80vh;
+    color: white;
+  }
+  
+  .welcome-section h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .welcome-section p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .auth-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 80vh;
+    padding-top: 4vh; /* tweak if needed */
+  }
+  
+  .auth-page h2 {
+    color: white;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
