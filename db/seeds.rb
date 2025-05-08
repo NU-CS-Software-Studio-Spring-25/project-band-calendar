@@ -8,48 +8,57 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-# Create events
-puts "Creating events..."
-dillo_day = Event.create!(
-  name: 'Dillo Day', 
-  date: '2025-06-17', 
-  venue: 'Northwestern Lakefill', 
-  location: 'Evanston, IL'
-)
+require 'faker'
+require 'set'
 
-lollapalooza = Event.create!(
-  name: 'Lollapalooza', 
-  date: '2025-08-01', 
-  venue: 'Grant Park', 
-  location: 'Chicago, IL'
-)
+# Clear existing data
+puts "Clearing existing data..."
+Band.destroy_all
+Event.destroy_all
 
-# Create Bands
+# Create 50 bands
 puts "Creating bands..."
-modest_mouse = Band.create!(
-  name: 'Modest Mouse',
-  photo_url: 'https://example.com/modest_mouse.jpg',
-  bio: 'American rock band formed in 1992'
-)
+used_band_names = Set.new
 
-kendrick = Band.create!(
-  name: 'Kendrick Lamar',
-  photo_url: 'https://example.com/kendrick.jpg',
-  bio: 'American rapper and songwriter'
-)
+50.times do
+  begin
+    band_name = Faker::Music.band
+    # Keep trying until we get a unique name
+    while used_band_names.include?(band_name)
+      band_name = Faker::Music.band
+    end
+    used_band_names.add(band_name)
+    
+    Band.create!(
+      name: band_name,
+      photo_url: Faker::Internet.url(host: 'example.com', path: '/band-photos'),
+      bio: Faker::Lorem.paragraph(sentence_count: 3)
+    )
+  rescue ActiveRecord::RecordInvalid => e
+    puts "Error creating band: #{e.message}"
+    retry
+  end
+end
 
-tame_impala = Band.create!(
-  name: 'Tame Impala',
-  photo_url: 'https://example.com/tame_impala.jpg',
-  bio: 'Australian psychedelic music project'
-)
+# Create 50 events
+puts "Creating events..."
+50.times do
+  Event.create!(
+    name: Faker::Music::RockBand.name + " Concert",
+    date: Faker::Time.between(from: DateTime.now, to: 1.year.from_now),
+    venue: Faker::Company.name + " Arena",
+    location: Faker::Address.city + ", " + Faker::Address.state
+  )
+end
 
-# Associate bands with events
-puts "Creating associations..."
-# Use direct SQL to insert associations
-ActiveRecord::Base.connection.execute("INSERT INTO bands_events (event_id, band_id) VALUES (#{dillo_day.id}, #{modest_mouse.id})")
-ActiveRecord::Base.connection.execute("INSERT INTO bands_events (event_id, band_id) VALUES (#{dillo_day.id}, #{tame_impala.id})")
-ActiveRecord::Base.connection.execute("INSERT INTO bands_events (event_id, band_id) VALUES (#{lollapalooza.id}, #{kendrick.id})")
-ActiveRecord::Base.connection.execute("INSERT INTO bands_events (event_id, band_id) VALUES (#{lollapalooza.id}, #{tame_impala.id})")
+# Create random band-event associations
+puts "Creating band-event associations..."
+Event.all.each do |event|
+  # Each event will have 1-4 bands
+  rand(1..4).times do
+    band = Band.all.sample
+    event.bands << band unless event.bands.include?(band)
+  end
+end
 
-puts "Seeding completed!"
+puts "Seed data created successfully!"
