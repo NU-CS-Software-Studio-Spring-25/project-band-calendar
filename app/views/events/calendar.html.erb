@@ -1,0 +1,16 @@
+<h1 class="mb-4 text-center">Event Calendar</h1>
+
+<div id="calendar" style="max-width: 900px; margin: auto;"></div>
+
+<%= link_to "← Back to Events List", events_path, class: "btn btn-outline-secondary mt-4 d-block text-center" %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const calendarEl = document.getElementById("calendar");
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      events: "/events.json"
+    });
+    calendar.render();
+  });
+</script>

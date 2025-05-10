@@ -1,6 +1,18 @@
 class EventsController < ApplicationController
   def index
     @events = Event.all
+  
+    respond_to do |format|
+      format.html  # 正常 HTML 页面显示
+      format.json do  # 这个是给 FullCalendar 用的
+        render json: @events.map { |event|
+          {
+            title: event.name,
+            start: event.date.strftime("%Y-%m-%d")
+          }
+        }
+      end
+    end
   end
 
   def show

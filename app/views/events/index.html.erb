@@ -1,4 +1,7 @@
-<h1 class="text-center my-4">All Events</h1>
+<div class="d-flex justify-content-between align-items-center my-4">
+  <h1 class="m-0">All Events</h1>
+  <%= link_to "View as Calendar", calendar_events_path, class: "btn btn-outline-primary", data: { turbo: false } %>
+</div>
 
 <div class="container">
   <% @events.each do |event| %>

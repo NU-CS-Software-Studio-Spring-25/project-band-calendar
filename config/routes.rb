@@ -14,7 +14,11 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  resources :events
+  resources :events do
+    collection do
+      get :calendar  # 对应 /events/calendar
+    end
+  end
   resources :bands
   root to: "home#index"
 end
