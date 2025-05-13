@@ -2,6 +2,10 @@
 
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/DBaAVOQl)
 
+## Link
+
+https://software-studio-d7d9fa70f610.herokuapp.com/
+
 ## MVP
 
 The MVP is that we have an events feed sorted by the most recent events to the most future events, where any user is able to upload a new event.
@@ -31,5 +35,7 @@ Weekly calendar where you can see events (can go back/forward a day)
 - Date
 - Time
 - Location
+
 ## Team Members
-Kevin Wang, Irving Peng, Ronghe Chen, Zhuoqun Wang 
+
+Kevin Wang, Irving Peng, Ronghe Chen, Zhuoqun Wang
