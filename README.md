@@ -36,6 +36,30 @@ Weekly calendar where you can see events (can go back/forward a day)
 - Time
 - Location
 
+## Spotify API Integration
+
+This application uses the Spotify API to search for and retrieve band information. When creating or editing events, you can search for bands using the Spotify database, which will automatically populate the band information in our database.
+
+### Features
+
+- Search for artists directly from the event creation/edit form
+- Automatically fetch artist information including image and bio
+- Display artist popularity metrics
+- Limit search results to 5 most relevant artists
+
+### Setup
+
+To use the Spotify API integration:
+
+1. Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/)
+2. Create a new application to get your credentials
+3. Create a `.env` file in the root directory with the following format (see SPOTIFY_ENV_EXAMPLE.md):
+
+```
+SPOTIFY_CLIENT_ID=your_client_id_here
+SPOTIFY_CLIENT_SECRET=your_client_secret_here
+```
+
 ## Team Members
 
 Kevin Wang, Irving Peng, Ronghe Chen, Zhuoqun Wang

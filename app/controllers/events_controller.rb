@@ -22,7 +22,6 @@ class EventsController < ApplicationController
 
   def new
     @event = Event.new
-    @bands = Band.all
   end
 
   def create
@@ -43,14 +42,12 @@ class EventsController < ApplicationController
         flash.now[:alert] = "An event named '#{@event.name}' already exists on #{@event.date&.strftime('%B %d, %Y')}."
       end
       
-      @bands = Band.all
       render :new, status: :unprocessable_entity
     end
   end
   
   def edit
     @event = Event.find(params[:id])
-    @bands = Band.all
   end
 
   def update
@@ -72,7 +69,6 @@ class EventsController < ApplicationController
         flash.now[:alert] = "An event named '#{@event.name}' already exists on #{@event.date&.strftime('%B %d, %Y')}."
       end
       
-      @bands = Band.all
       render :edit, status: :unprocessable_entity
     end
   end

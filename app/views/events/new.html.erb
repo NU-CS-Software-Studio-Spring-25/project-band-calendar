@@ -25,96 +25,361 @@
     </div>
     
     <div class="form-group mb-4">
-      <label>Bands</label>
-      <div class="mb-3">
-        <input type="text" id="band-search" class="form-control" placeholder="Search for bands">
-      </div>
+      <label class="form-label">Bands</label>
       
-      <div id="band-search-results" class="mb-3">
-        <!-- Search results will appear here -->
-      </div>
-      
-      <div id="selected-bands" class="mb-3">
-        <h5>Selected Bands:</h5>
-        <ul class="list-group" id="selected-bands-list">
-          <!-- Selected bands will appear here -->
-        </ul>
-      </div>
-      
-      <!-- Hidden field to store selected band IDs -->
-      <div id="band-ids-container">
-        <!-- Band IDs will be added here as hidden fields -->
-      </div>
-      
-      <div class="mt-2">
-        <%= link_to "Add New Band", new_band_path, class: "btn btn-sm nav-button" %>
+      <div class="card mb-3 border-0 shadow-sm">
+        <div class="card-body">
+          <div class="band-search-container pb-2 mb-4">
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0">
+                <i class="fas fa-search text-muted"></i>
+              </span>
+              <input type="text" id="band-search" class="form-control border-start-0 ps-0" 
+                     placeholder="Search for bands" aria-label="Search bands">
+            </div>
+            
+            <div id="band-search-results" class="position-relative">
+              <!-- Search results will appear here -->
+            </div>
+          </div>
+          
+          <div id="selected-bands" class="mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <label class="form-label mb-0 fw-bold">Selected Artists:</label>
+              <span id="selected-count" class="badge bg-primary rounded-pill">0</span>
+            </div>
+            <div id="selected-bands-list" class="selected-bands-container">
+              <!-- No bands selected message -->
+              <div id="no-bands-message" class="text-muted text-center p-3">
+                No bands selected. Search and add bands above.
+              </div>
+              <!-- Selected bands will appear here -->
+            </div>
+          </div>
+          
+          <!-- Hidden field to store selected band IDs -->
+          <div id="band-ids-container">
+            <!-- Band IDs will be added here as hidden fields -->
+          </div>
+        </div>
       </div>
     </div>
     
     <div class="mt-4">
-      <%= f.submit "Create", class: "btn nav-button" %>
-      <%= link_to "Cancel", events_path, class: "btn cancel-button ms-2" %>
+      <%= f.submit "Create", class: "btn btn-primary px-4" %>
+      <%= link_to "Cancel", events_path, class: "btn btn-secondary ms-2" %>
     </div>
   <% end %>
 </div>
 
+<style>
+  .band-search-container {
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .search-results-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    max-height: 280px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
+  
+  .search-results-dropdown.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80px;
+    max-height: none;
+    overflow: hidden;
+  }
+  
+  .selected-bands-container {
+    min-height: 100px;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    background: #f8f9fa;
+  }
+  
+  .selected-band-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin: 8px;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+    transition: all 0.2s;
+  }
+  
+  .selected-band-item:hover {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .band-search-result-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  
+  .band-search-result-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .band-search-result-item.create-new {
+    background-color: #e8f4fc;
+    border-top: 1px solid #dee2e6;
+    justify-content: center;
+    font-weight: 500;
+    color: #0d6efd;
+    position: sticky;
+    bottom: 0;
+  }
+  
+  .band-search-result-item.create-new:hover {
+    background-color: #d1e7fa;
+  }
+  
+  .band-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    object-fit: cover;
+  }
+  
+  .band-info {
+    margin-left: 12px;
+    line-height: 1.2;
+  }
+  
+  .spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80px;
+  }
+  
+  /* Smooth transitions */
+  .search-results-dropdown {
+    transition: opacity 0.2s ease;
+  }
+  
+  .selected-band-item {
+    animation: fadeIn 0.3s ease;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Debug: Check if bands data is available and log it
-    console.log("Bands data:", <%= raw @bands.to_json(only: [:id, :name]) %>);
-    
-    const bands = <%= raw @bands.to_json(only: [:id, :name]) %>;
+  // Initialize the band selection functionality
+  function initBandSelection() {
     const searchInput = document.getElementById('band-search');
     const searchResults = document.getElementById('band-search-results');
     const selectedBandsList = document.getElementById('selected-bands-list');
+    const noBandsMessage = document.getElementById('no-bands-message');
     const bandIdsContainer = document.getElementById('band-ids-container');
+    const selectedCountBadge = document.getElementById('selected-count');
     const selectedBands = new Set();
+    let searchTimeout = null;
+    let searchDropdown = null;
+    
+    // Clear any existing bands/results from previous page visits
+    searchResults.innerHTML = '';
+    
+    // Function to update the selected count badge
+    function updateSelectedCount() {
+      selectedCountBadge.textContent = selectedBands.size;
+      selectedCountBadge.style.display = selectedBands.size > 0 ? 'inline-block' : 'none';
+    }
+    
+    // Initialize count badge
+    updateSelectedCount();
+    
+    // Function to update the no bands message visibility
+    function updateNoBandsMessage() {
+      if (selectedBands.size === 0) {
+        noBandsMessage.style.display = 'block';
+      } else {
+        noBandsMessage.style.display = 'none';
+      }
+    }
+    
+    // Function to close dropdown
+    function closeSearchDropdown() {
+      if (searchDropdown) {
+        searchDropdown.remove();
+        searchDropdown = null;
+      }
+    }
+    
+    // Function to create the search results dropdown
+    function createSearchDropdown() {
+      // Remove existing dropdown if it exists
+      closeSearchDropdown();
+      
+      // Create new dropdown
+      searchDropdown = document.createElement('div');
+      searchDropdown.className = 'search-results-dropdown';
+      searchResults.appendChild(searchDropdown);
+      
+      return searchDropdown;
+    }
+    
+    // Function to show loading spinner in dropdown
+    function showLoadingDropdown() {
+      // Remove existing dropdown if it exists
+      closeSearchDropdown();
+      
+      // Create loading dropdown
+      searchDropdown = document.createElement('div');
+      searchDropdown.className = 'search-results-dropdown loading';
+      
+      const spinner = document.createElement('div');
+      spinner.className = 'spinner-border text-primary';
+      spinner.setAttribute('role', 'status');
+      spinner.innerHTML = '<span class="visually-hidden">Loading...</span>';
+      
+      searchDropdown.appendChild(spinner);
+      searchResults.appendChild(searchDropdown);
+      
+      return searchDropdown;
+    }
     
     // Function to render search results
     function renderSearchResults(results) {
-      searchResults.innerHTML = '';
+      // Clear existing results and create dropdown container
+      const dropdown = createSearchDropdown();
       
       if (results.length === 0) {
-        searchResults.innerHTML = '<p class="text-muted">No bands found</p>';
-        return;
+        // No results found message
+        const noResultsMessage = document.createElement('div');
+        noResultsMessage.className = 'p-3 text-center';
+        noResultsMessage.innerHTML = '<p class="text-muted mb-0">No bands found matching your search.</p>';
+        dropdown.appendChild(noResultsMessage);
+      } else {
+        // Show search results
+        const resultsContainer = document.createElement('div');
+        
+        results.forEach(band => {
+          const item = document.createElement('div');
+          item.className = 'band-search-result-item';
+          
+          // Band image
+          const img = document.createElement('img');
+          img.className = 'band-img';
+          img.src = band.image_url || 'https://via.placeholder.com/40';
+          img.alt = band.name;
+          img.onerror = function() { this.src = 'https://via.placeholder.com/40'; };
+          
+          // Band name
+          const bandInfo = document.createElement('div');
+          bandInfo.className = 'band-info';
+          bandInfo.textContent = band.name;
+          
+          item.appendChild(img);
+          item.appendChild(bandInfo);
+          
+          item.addEventListener('click', () => {
+            // Close dropdown immediately when a band is selected
+            closeSearchDropdown();
+            searchInput.value = '';
+            
+            // When a band is selected, get detailed info and add to database
+            fetch(`/spotify/get_artist_info?spotify_id=${encodeURIComponent(band.spotify_id)}`)
+              .then(response => response.json())
+              .then(data => {
+                if (data.band_id && !selectedBands.has(data.band_id.toString())) {
+                  addBand({
+                    id: data.band_id,
+                    name: data.name,
+                    image_url: data.photo_url
+                  });
+                }
+              })
+              .catch(error => {
+                console.error('Error fetching artist info:', error);
+              });
+          });
+          
+          resultsContainer.appendChild(item);
+        });
+        
+        dropdown.appendChild(resultsContainer);
       }
       
-      const resultsList = document.createElement('div');
-      resultsList.className = 'list-group';
+      // Always add "Create New" as the last option - make it sticky
+      const createNewItem = document.createElement('div');
+      createNewItem.className = 'band-search-result-item create-new';
+      createNewItem.innerHTML = '<i class="fas fa-plus-circle me-2"></i> None found? Create New';
+      createNewItem.addEventListener('click', () => {
+        window.location.href = '<%= new_band_path %>';
+      });
+      dropdown.appendChild(createNewItem);
       
-      results.forEach(band => {
-        if (!selectedBands.has(band.id)) {
-          const item = document.createElement('button');
-          item.type = 'button';
-          item.className = 'list-group-item list-group-item-action';
-          item.textContent = band.name;
-          item.addEventListener('click', () => {
-            addBand(band);
-            searchInput.value = '';
-            renderSearchResults([]);
-          });
-          resultsList.appendChild(item);
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function closeDropdown(e) {
+        if (!searchResults.contains(e.target) && !searchInput.contains(e.target)) {
+          closeSearchDropdown();
+          document.removeEventListener('click', closeDropdown);
         }
       });
-      
-      searchResults.appendChild(resultsList);
     }
     
     // Function to add a band to selected list
     function addBand(band) {
-      if (selectedBands.has(band.id)) return;
+      if (selectedBands.has(band.id.toString())) return;
       
-      selectedBands.add(band.id);
+      selectedBands.add(band.id.toString());
       
       // Add to visual list
-      const item = document.createElement('li');
-      item.className = 'list-group-item d-flex justify-content-between align-items-center';
-      item.innerHTML = `
-        ${band.name}
-        <button type="button" class="btn btn-sm btn-outline-danger remove-band" data-id="${band.id}">
-          Remove
-        </button>
-      `;
+      const item = document.createElement('div');
+      item.className = 'selected-band-item';
+      item.id = `band-item-${band.id}`;
+      
+      // Band image
+      const img = document.createElement('img');
+      img.className = 'band-img';
+      img.src = band.image_url || 'https://via.placeholder.com/40';
+      img.alt = band.name;
+      img.onerror = function() { this.src = 'https://via.placeholder.com/40'; };
+      
+      // Band name and remove button container
+      const itemContent = document.createElement('div');
+      itemContent.className = 'd-flex justify-content-between align-items-center w-100 ms-2';
+      
+      // Band name
+      const bandName = document.createElement('span');
+      bandName.textContent = band.name;
+      
+      // Remove button with text
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.className = 'btn btn-sm btn-danger';
+      removeBtn.innerHTML = 'Remove';
+      removeBtn.setAttribute('data-id', band.id);
+      removeBtn.setAttribute('title', 'Remove band');
+      removeBtn.addEventListener('click', () => {
+        removeBand(band.id);
+      });
+      
+      // Add elements to item
+      itemContent.appendChild(bandName);
+      itemContent.appendChild(removeBtn);
+      item.appendChild(img);
+      item.appendChild(itemContent);
+      
       selectedBandsList.appendChild(item);
       
       // Add hidden input
@@ -125,54 +390,99 @@
       input.id = `band-input-${band.id}`;
       bandIdsContainer.appendChild(input);
       
-      // Add remove event listener
-      item.querySelector('.remove-band').addEventListener('click', () => {
-        removeBand(band.id);
-      });
+      // Update no bands message and count
+      updateNoBandsMessage();
+      updateSelectedCount();
     }
     
     // Function to remove a band from selected list
     function removeBand(bandId) {
-      selectedBands.delete(bandId);
+      selectedBands.delete(bandId.toString());
       
-      // Remove from visual list
-      const items = selectedBandsList.querySelectorAll('li');
-      items.forEach(item => {
-        const removeBtn = item.querySelector('.remove-band');
-        if (removeBtn && removeBtn.dataset.id == bandId) {
-          item.remove();
-        }
-      });
+      // Remove visual item
+      const item = document.getElementById(`band-item-${bandId}`);
+      if (item) item.remove();
       
       // Remove hidden input
       const input = document.getElementById(`band-input-${bandId}`);
       if (input) input.remove();
+      
+      // Update no bands message and count
+      updateNoBandsMessage();
+      updateSelectedCount();
     }
     
-    // Search input event
+    // Search input event with debounce
     searchInput.addEventListener('input', function() {
-      const query = this.value.toLowerCase().trim();
-      console.log("Search query:", query);
+      const query = this.value.trim();
       
+      // Clear any existing timeout
+      if (searchTimeout) {
+        clearTimeout(searchTimeout);
+      }
+      
+      // If query is empty, close dropdown and return
       if (query === '') {
-        renderSearchResults([]);
+        closeSearchDropdown();
         return;
       }
       
-      const results = bands.filter(band => 
-        band.name.toLowerCase().includes(query)
-      );
+      // Show loading dropdown
+      showLoadingDropdown();
       
-      console.log("Search results:", results);
-      renderSearchResults(results);
+      // Set a timeout to prevent too many API calls
+      searchTimeout = setTimeout(() => {
+        // Call Spotify API
+        fetch(`/spotify/search_artists?query=${encodeURIComponent(query)}`)
+          .then(response => response.json())
+          .then(data => {
+            renderSearchResults(data);
+          })
+          .catch(error => {
+            console.error('Error searching artists:', error);
+            
+            // Show error in dropdown
+            const dropdown = createSearchDropdown();
+            dropdown.innerHTML = '<div class="p-3 text-center"><p class="text-danger mb-0">Error searching for artists</p></div>';
+          });
+      }, 500); // 500ms delay
     });
     
-    // Initial display - always show all bands when clicking into the search field
+    // Focus the search input
     searchInput.addEventListener('focus', function() {
-      if (this.value === '') {
-        renderSearchResults(bands);
+      if (this.value.trim() !== '') {
+        // Show loading dropdown
+        showLoadingDropdown();
+        
+        // Call Spotify API
+        fetch(`/spotify/search_artists?query=${encodeURIComponent(this.value.trim())}`)
+          .then(response => response.json())
+          .then(data => {
+            renderSearchResults(data);
+          })
+          .catch(error => {
+            console.error('Error searching artists:', error);
+            
+            // Show error in dropdown
+            const dropdown = createSearchDropdown();
+            dropdown.innerHTML = '<div class="p-3 text-center"><p class="text-danger mb-0">Error searching for artists</p></div>';
+          });
       }
     });
-  });
+    
+    // Initialize the no bands message
+    updateNoBandsMessage();
+  }
+
+  // Run initialization on DOMContentLoaded
+  document.addEventListener('DOMContentLoaded', initBandSelection);
+  
+  // Also run initialization on Turbo navigation
+  document.addEventListener('turbo:load', initBandSelection);
+  
+  // Fallback for non-Turbo navigation
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    initBandSelection();
+  }
 </script>
 
