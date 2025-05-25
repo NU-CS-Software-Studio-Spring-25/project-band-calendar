@@ -66,3 +66,6 @@ end
 
 gem "devise", "~> 4.9"
 gem 'faker'
+
+gem 'dotenv', groups: [:development, :test]
+gem 'rspotify'

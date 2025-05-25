@@ -1,0 +1,50 @@
+<div class="card mb-3 border-0 shadow-sm" 
+     data-controller="band-selection"
+     data-band-selection-search-url-value="<%= spotify_search_artists_path %>"
+     data-band-selection-artist-info-url-value="<%= spotify_get_artist_info_path %>"
+     data-band-selection-new-band-url-value="<%= new_band_path %>"
+     <%= defined?(bands) && bands.present? ? "data-bands='#{bands.to_json}'" : "" %>>
+  <div class="card-body">
+    <div class="band-search-container pb-2 mb-4">
+      <div class="input-group">
+        <span class="input-group-text bg-light border-end-0">
+          <i class="fas fa-search text-muted"></i>
+        </span>
+        <input type="text" id="band-search" class="form-control border-start-0 ps-0" 
+               placeholder="Search for bands" aria-label="Search bands" 
+               data-band-selection-target="search"
+               data-action="input->band-selection#search focus->band-selection#searchFocus">
+      </div>
+      
+      <div id="band-search-results" class="position-relative" data-band-selection-target="results">
+        <!-- Search results will appear here -->
+      </div>
+    </div>
+    
+    <div id="selected-bands" class="mb-3">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <label class="form-label mb-0 fw-bold">Selected Artists:</label>
+        <span id="selected-count" class="badge bg-primary rounded-pill" data-band-selection-target="count">0</span>
+      </div>
+      <div id="selected-bands-list" class="selected-bands-container" data-band-selection-target="list">
+        <!-- No bands selected message -->
+        <div id="no-bands-message" class="text-muted text-center p-3" data-band-selection-target="noMessage">
+          No bands selected. Search and add bands above.
+        </div>
+        <!-- Selected bands will appear here -->
+      </div>
+    </div>
+    
+    <!-- Hidden field to store selected band IDs -->
+    <div id="band-ids-container" data-band-selection-target="idsContainer">
+      <!-- Band IDs will be added here as hidden fields -->
+    </div>
+    
+    <!-- Loading spinner -->
+    <div data-band-selection-target="loading" style="display: none" class="spinner-container">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </div>
+</div> 
