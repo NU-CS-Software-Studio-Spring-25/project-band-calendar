@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Live Music Calendar" %></title>
+    <title><%= content_for(:title) || "NoteSync" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -26,13 +26,13 @@
     <%= stylesheet_link_tag "custom", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "band_selection", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    
+    <%= favicon_link_tag asset_path('notesync-logo.png') %>
   </head>
 
   <body>
   <nav class="navbar navbar-expand-lg navbar-dark transparent-navbar mb-4">
     <div class="container-fluid">
-      <%= link_to "Live Music Calendar", root_path, class: "navbar-brand brand-offset" %>
+      <%= link_to "NoteSync", root_path, class: "navbar-brand brand-offset" %>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
@@ -66,4 +66,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 </body>
+<div class="footer">
+  Designed 2025
+</div>
 </html>
