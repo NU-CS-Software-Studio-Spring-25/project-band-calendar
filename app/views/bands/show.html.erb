@@ -20,9 +20,12 @@
                   <%= link_to event_path(event), class: "list-group-item list-group-item-action" do %>
                     <div class="d-flex w-100 justify-content-between">
                       <h5 class="mb-1"><%= event.name %></h5>
-                      <small><%= event.date.strftime("%B %d, %Y") %></small>
+                      <small><%= event.date.strftime("%B %d, %Y at %I:%M %p") %></small>
                     </div>
-                    <p class="mb-1"><%= "#{event.venue}, #{event.location}" %></p>
+                    <p class="mb-1">
+                      <i class="fas fa-map-marker-alt text-danger me-1"></i>
+                      <%= event.venue.name %>, <%= event.location %>
+                    </p>
                   <% end %>
                 <% end %>
               </div>
