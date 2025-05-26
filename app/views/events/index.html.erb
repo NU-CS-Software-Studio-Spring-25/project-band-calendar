@@ -10,9 +10,24 @@
         <h3 class="card-title">
           <%= link_to event.name, event_path(event), class: "text-decoration-none text-primary" %>
         </h3>
-        <p class="card-text"><strong><%= event.date.strftime("%B %d, %Y") %></strong></p>
-        <p class="card-text"><%= "#{event.venue}, #{event.location}" %></p>
-        <p class="card-text text-muted">Featuring <%= event.bands.count %> bands</p>
+        <p class="card-text"><strong><%= event.date.strftime("%B %d, %Y at %I:%M %p") %></strong></p>
+        <p class="card-text">
+          <strong>Venue:</strong> <%= link_to event.venue.name, venue_path(event.venue), class: "text-decoration-none" %>
+          <span class="text-muted">(<%= event.location %>)</span>
+        </p>
+        <% if event.bands.any? %>
+          <div class="card-text mt-2">
+            <strong>Lineup:</strong>
+            <span>
+              <% event.bands.each_with_index do |band, index| %>
+                <%= link_to band.name, band_path(band), class: "text-decoration-none" %><!--
+                --><%= index < event.bands.size - 1 ? ", " : "" %>
+              <% end %>
+            </span>
+          </div>
+        <% else %>
+          <p class="card-text text-muted">No bands announced yet</p>
+        <% end %>
       </div>
     </div>
   <% end %>

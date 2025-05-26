@@ -10,9 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_06_145113) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_27_140002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "band_events", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.bigint "band_id", null: false
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "set_position"
+    t.text "notes"
+    t.index ["band_id", "event_id"], name: "index_band_events_on_band_id_and_event_id", unique: true
+    t.index ["band_id"], name: "index_band_events_on_band_id"
+    t.index ["event_id"], name: "index_band_events_on_event_id"
+  end
 
   create_table "bands", force: :cascade do |t|
     t.string "name"
@@ -22,13 +36,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_06_145113) do
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
   end
 
-  create_table "bands_events", id: false, force: :cascade do |t|
-    t.bigint "event_id"
-    t.bigint "band_id"
-    t.index ["band_id"], name: "index_bands_events_on_band_id"
-    t.index ["event_id"], name: "index_bands_events_on_event_id"
-  end
-
   create_table "events", force: :cascade do |t|
     t.string "name"
     t.datetime "date"
@@ -36,6 +43,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_06_145113) do
     t.string "location"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.bigint "venue_id"
+    t.index ["venue_id"], name: "index_events_on_venue_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -49,4 +58,30 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_06_145113) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
+
+  create_table "venues", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "street_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "city", default: "Unknown", null: false
+    t.string "state"
+    t.string "postal_code"
+    t.string "country", default: "Unknown", null: false
+    t.text "description"
+    t.string "venue_type"
+    t.integer "capacity"
+    t.string "website"
+    t.string "phone"
+    t.string "email"
+    t.boolean "accessible", default: false
+    t.boolean "all_ages", default: false
+    t.boolean "has_food", default: false
+    t.boolean "has_bar", default: false
+    t.index ["name"], name: "index_venues_on_name", unique: true
+  end
+
+  add_foreign_key "band_events", "bands"
+  add_foreign_key "band_events", "events"
+  add_foreign_key "events", "venues"
 end

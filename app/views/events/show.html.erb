@@ -1,40 +1,114 @@
 <div class="container mt-4">
   <div class="card shadow">
+    <div class="card-header bg-primary text-white">
+      <h1 class="card-title mb-0 h2"><%= @event.name %></h1>
+    </div>
     <div class="card-body">
-      <h1 class="card-title mb-4"><%= @event.name %></h1>
-      
-      <div class="row mb-3">
+      <div class="row mb-4">
         <div class="col-md-4">
-          <p><strong>Date:</strong> <%= @event.date.strftime("%B %d, %Y") %></p>
+          <p class="mb-2">
+            <i class="far fa-calendar me-2 text-primary"></i>
+            <strong>Date:</strong> <%= @event.date.strftime("%B %d, %Y at %I:%M %p") %>
+          </p>
         </div>
         <div class="col-md-4">
-          <p><strong>Venue:</strong> <%= @event.venue %></p>
+          <p class="mb-2">
+            <i class="fas fa-map-marker-alt me-2 text-danger"></i>
+            <strong>Venue:</strong> <%= link_to @event.venue.name, venue_path(@event.venue), class: "text-decoration-none" %>
+          </p>
         </div>
         <div class="col-md-4">
-          <p><strong>Location:</strong> <%= @event.location %></p>
+          <p class="mb-2">
+            <i class="fas fa-location-arrow me-2 text-success"></i>
+            <strong>Location:</strong> <%= @event.location %>
+          </p>
         </div>
       </div>
       
-      <div class="mt-4">
-        <h2>Lineup</h2>
-        <% if @bands.any? %>
-          <div class="row">
-            <% @bands.each do |band| %>
-              <div class="col-md-6 mb-3">
-                <div class="card h-100">
-                  <div class="card-body">
-                    <h5 class="card-title">
-                      <%= link_to band.name, band_path(band), class: "text-decoration-none" %>
-                    </h5>
-                    <p class="card-text"><%= band.bio %></p>
+      <div class="card mb-4">
+        <div class="card-header bg-light">
+          <h2 class="h4 mb-0">Lineup</h2>
+        </div>
+        <div class="card-body">
+          <% if @band_events.any? %>
+            <div class="list-group">
+              <% @band_events.each do |band_event| %>
+                <div class="list-group-item">
+                  <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                      <span class="badge bg-primary rounded-pill fs-6 p-2"><%= band_event.set_position || 0 %></span>
+                    </div>
+                    <div class="col-md-4">
+                      <h5 class="mb-1">
+                        <%= link_to band_event.band.name, band_path(band_event.band), class: "text-decoration-none fw-bold" %>
+                      </h5>
+                    </div>
+                    <div class="col-md-6">
+                      <% if band_event.start_time.present? %>
+                        <p class="mb-1">
+                          <i class="far fa-clock me-1 text-primary"></i>
+                          <strong>Set Time:</strong> 
+                          <%= band_event.start_time.strftime("%I:%M %p") %>
+                          <% if band_event.end_time.present? %>
+                            - <%= band_event.end_time.strftime("%I:%M %p") %>
+                          <% end %>
+                        </p>
+                      <% end %>
+                      <% if band_event.notes.present? %>
+                        <p class="mb-0 text-muted"><small><%= band_event.notes %></small></p>
+                      <% end %>
+                    </div>
                   </div>
                 </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="alert alert-info">No bands have been announced yet.</div>
+          <% end %>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header bg-light">
+          <h3 class="h5 mb-0">Venue Information</h3>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <p>
+                <strong>Name:</strong> <%= link_to @event.venue.name, venue_path(@event.venue), class: "text-decoration-none" %>
+              </p>
+              <p>
+                <strong>Address:</strong> <%= @event.venue.street_address %>, <%= @event.venue.city %><%= ", #{@event.venue.state}" if @event.venue.state.present? %>, <%= @event.venue.country %>
+              </p>
+              <% if @event.venue.phone.present? %>
+                <p><strong>Phone:</strong> <%= @event.venue.phone %></p>
+              <% end %>
+            </div>
+            <div class="col-md-6">
+              <% if @event.venue.website.present? %>
+                <p>
+                  <strong>Website:</strong> 
+                  <%= link_to @event.venue.website, @event.venue.website, target: "_blank", class: "text-decoration-none" %>
+                </p>
+              <% end %>
+              <div class="mt-2">
+                <% if @event.venue.accessible %>
+                  <span class="badge bg-info text-dark me-1"><i class="fas fa-wheelchair me-1"></i>Accessible</span>
+                <% end %>
+                <% if @event.venue.all_ages %>
+                  <span class="badge bg-success me-1"><i class="fas fa-child me-1"></i>All Ages</span>
+                <% end %>
+                <% if @event.venue.has_food %>
+                  <span class="badge bg-warning text-dark me-1"><i class="fas fa-utensils me-1"></i>Food</span>
+                <% end %>
+                <% if @event.venue.has_bar %>
+                  <span class="badge bg-danger me-1"><i class="fas fa-cocktail me-1"></i>Bar</span>
+                <% end %>
               </div>
-            <% end %>
+            </div>
           </div>
-        <% else %>
-          <div class="alert alert-info">No bands have been announced yet.</div>
-        <% end %>
+        </div>
       </div>
       
       <div class="mt-4 btn-group">
