@@ -18,6 +18,10 @@ Rails.application.routes.draw do
     collection do
       get :calendar  # 对应 /events/calendar
     end
+    member do
+      patch :approve
+      patch :disapprove
+    end
   end
   resources :bands
   resources :venues
