@@ -27,6 +27,21 @@
     <%= stylesheet_link_tag "band_selection", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
     <%= favicon_link_tag asset_path('notesync-logo.png') %>
+
+    <style>
+      .submit-event-btn {
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 30px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+      
+      .submit-event-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
+    </style>
   </head>
 
   <body>
@@ -40,33 +55,76 @@
 
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <%= link_to "Events", events_path, class: "nav-link" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Bands", bands_path, class: "nav-link" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Venues", venues_path, class: "nav-link" %>
+          </li>
         </ul>
 
-        <ul class="navbar-nav">
-          <% if user_signed_in? %>
-            <li class="nav-item">
-              <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "nav-link" %>
-            </li>
-          <% else %>
-            <li class="nav-item">
-              <%= link_to "Login", new_user_session_path, class: "nav-link" %>
-            </li>
-            <li class="nav-item">
-              <%= link_to "Sign Up", new_user_registration_path, class: "nav-link" %>
-            </li>
+        <div class="d-flex align-items-center">
+          <%= link_to new_event_path, class: "submit-event-btn btn btn-warning me-3" do %>
+            <i class="fas fa-plus-circle me-1"></i> 
+            <% if current_user_admin? %>
+              Add Event
+            <% else %>
+              Submit Event
+            <% end %>
           <% end %>
-        </ul>
+          
+          <ul class="navbar-nav">
+            <% if user_signed_in? %>
+              <% if current_user_admin? %>
+                <li class="nav-item">
+                  <%= link_to "Pending Events", events_path(pending: true), class: "nav-link" %>
+                </li>
+              <% end %>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                  <%= current_user.email %>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end">
+                  <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "dropdown-item" %>
+                </div>
+              </li>
+            <% else %>
+              <li class="nav-item">
+                <%= link_to "Login", new_user_session_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to "Sign Up", new_user_registration_path, class: "nav-link" %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
       </div>
     </div>
   </nav>
 
   <div class="container">
+    <% if flash[:notice] %>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <%= flash[:notice] %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% end %>
+    <% if flash[:alert] %>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <%= flash[:alert] %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% end %>
+    
     <%= yield %>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 </body>
 <div class="footer">
-  Designed 2025
+  
 </div>
 </html>
