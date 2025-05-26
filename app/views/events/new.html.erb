@@ -10,8 +10,11 @@
     </div>
     
     <div class="form-group mb-3">
-      <%= f.label :venue, "Venue" %>
-      <%= f.text_field :venue, class: "form-control", placeholder: "Enter venue name", required: true %>
+      <%= f.label :venue_id, "Venue" %>
+      <div class="d-flex">
+        <%= f.collection_select :venue_id, @venues, :id, :display_name, { prompt: "Select venue" }, { class: "form-select me-2", required: true } %>
+        <%= link_to "Add New Venue", new_venue_path, class: "btn btn-outline-primary" %>
+      </div>
     </div>
     
     <div class="form-group mb-3">

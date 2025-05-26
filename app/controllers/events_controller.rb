@@ -8,7 +8,8 @@ class EventsController < ApplicationController
         render json: @events.map { |event|
           {
             title: event.name,
-            start: event.date.strftime("%Y-%m-%d")
+            start: event.date.strftime("%Y-%m-%d"),
+            venue: event.venue.name
           }
         }
       end
@@ -18,10 +19,12 @@ class EventsController < ApplicationController
   def show
     @event = Event.find(params[:id])
     @bands = @event.bands
+    @band_events = @event.band_events.includes(:band).ordered_by_time
   end
 
   def new
     @event = Event.new
+    @venues = Venue.all.order(:name)
   end
 
   def create
@@ -30,13 +33,18 @@ class EventsController < ApplicationController
     if @event.save
       # Handle band associations if band_ids are provided
       if params[:event][:band_ids].present?
-        params[:event][:band_ids].reject(&:blank?).each do |band_id|
-          @event.bands << Band.find(band_id)
+        params[:event][:band_ids].reject(&:blank?).each_with_index do |band_id, index|
+          @event.band_events.create!(
+            band_id: band_id,
+            set_position: index + 1
+          )
         end
       end
       
       redirect_to @event, notice: 'Event was successfully created.'
     else
+      @venues = Venue.all.order(:name)
+      
       # Add flash alert for duplicate event
       if @event.errors[:name].include?('already exists for this date')
         flash.now[:alert] = "An event named '#{@event.name}' already exists on #{@event.date&.strftime('%B %d, %Y')}."
@@ -48,6 +56,7 @@ class EventsController < ApplicationController
   
   def edit
     @event = Event.find(params[:id])
+    @venues = Venue.all.order(:name)
   end
 
   def update
@@ -55,15 +64,20 @@ class EventsController < ApplicationController
     
     if @event.update(event_params)
       # Update band associations
-      @event.bands.clear
+      @event.band_events.destroy_all
       if params[:event][:band_ids].present?
-        params[:event][:band_ids].reject(&:blank?).each do |band_id|
-          @event.bands << Band.find(band_id)
+        params[:event][:band_ids].reject(&:blank?).each_with_index do |band_id, index|
+          @event.band_events.create!(
+            band_id: band_id,
+            set_position: index + 1
+          )
         end
       end
       
       redirect_to @event, notice: 'Event was successfully updated.'
     else
+      @venues = Venue.all.order(:name)
+      
       # Add flash alert for duplicate event
       if @event.errors[:name].include?('already exists for this date')
         flash.now[:alert] = "An event named '#{@event.name}' already exists on #{@event.date&.strftime('%B %d, %Y')}."
@@ -82,6 +96,6 @@ class EventsController < ApplicationController
   private
 
   def event_params
-    params.require(:event).permit(:name, :venue, :location, :date)
+    params.require(:event).permit(:name, :venue_id, :location, :date)
   end
 end

@@ -20,6 +20,8 @@ Rails.application.routes.draw do
     end
   end
   resources :bands
+  resources :venues
+  resources :band_events, only: [:create, :update, :destroy]
   
   # Spotify API routes
   get 'spotify/search_artists', to: 'spotify#search_artists'
