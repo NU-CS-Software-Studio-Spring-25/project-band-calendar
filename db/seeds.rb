@@ -17,6 +17,29 @@ BandEvent.destroy_all
 Band.destroy_all
 Event.destroy_all
 Venue.destroy_all
+User.destroy_all
+
+# Create users
+puts "Creating users..."
+# Create an admin user
+admin = User.create!(
+  email: "admin@example.com",
+  password: "password",
+  password_confirmation: "password",
+  admin: true
+)
+puts "Created admin user: #{admin.email} with password: password"
+
+# Create regular users
+5.times do
+  User.create!(
+    email: Faker::Internet.email,
+    password: "password",
+    password_confirmation: "password"
+  )
+end
+users = User.where(admin: false)
+puts "Created #{users.count} regular users"
 
 # Create venues
 puts "Creating venues..."
@@ -87,8 +110,9 @@ today = Date.today
     event = Event.create!(
       name: "#{Faker::Marketing.buzzwords} #{['Night', 'Festival', 'Live', 'Concert', 'Show'].sample}",
       venue: venues.sample,
-      location: Faker::Address.community,
-      date: event_datetime
+      date: event_datetime,
+      approved: true,
+      submitted_by: [admin, users.sample].sample
     )
     
     # Add 1-5 bands to each event (ensure no duplicate bands)
@@ -120,8 +144,9 @@ if Event.where("DATE(date) = ?", today).count == 0
   today_event = Event.create!(
     name: "Tonight's Special Event",
     venue: today_venue,
-    location: today_venue.city,
-    date: today.to_datetime + 20.hours
+    date: today.to_datetime + 20.hours,
+    approved: true,
+    submitted_by: admin
   )
   
   # Ensure at least 3 bands for today's event (with no duplicates)
@@ -140,4 +165,37 @@ if Event.where("DATE(date) = ?", today).count == 0
   end
 end
 
+# Create some pending events awaiting approval
+puts "Creating some pending events..."
+3.times do
+  event_date = today + rand(1..30).days
+  hour = rand(12..23)
+  minute = [0, 30].sample
+  event_datetime = event_date.to_datetime + hour.hours + minute.minutes
+  
+  event = Event.create!(
+    name: "PENDING: #{Faker::Marketing.buzzwords} #{['Night', 'Festival', 'Live', 'Concert'].sample}",
+    venue: venues.sample,
+    date: event_datetime,
+    approved: false,
+    submitted_by: users.sample
+  )
+  
+  # Add bands to pending event
+  event_bands = bands.to_a.shuffle.take(rand(1..3))
+  event_bands.each_with_index do |band, i|
+    start_time = event_datetime + (i * 45).minutes
+    end_time = start_time + 45.minutes
+    
+    BandEvent.create!(
+      event: event,
+      band: band,
+      set_position: i + 1,
+      start_time: start_time,
+      end_time: end_time
+    )
+  end
+end
+
+puts "Created #{Event.where(approved: false).count} pending events"
 puts "Seeding completed successfully!"
