@@ -18,6 +18,7 @@ export default class extends Controller {
 
   connect() {
     this.selectedBands = new Set();
+    this.bandsData = new Map(); // Store band data for event emitting
     this.searchTimeout = null;
     this.searchDropdown = null;
     this.updateSelectedCount();
@@ -28,6 +29,9 @@ export default class extends Controller {
     prePopulatedBands.forEach((band) => {
       this.addBand(band);
     });
+
+    // Emit initial event with pre-populated bands
+    this.emitBandsChangedEvent();
   }
 
   search() {
@@ -144,6 +148,7 @@ export default class extends Controller {
   removeBand(event) {
     const bandId = event.currentTarget.dataset.id;
     this.selectedBands.delete(bandId.toString());
+    this.bandsData.delete(bandId.toString());
 
     // Remove visual item
     const item = document.getElementById(`band-item-${bandId}`);
@@ -156,6 +161,9 @@ export default class extends Controller {
     // Update no bands message
     this.updateNoBandsMessage();
     this.updateSelectedCount();
+
+    // Emit bands changed event
+    this.emitBandsChangedEvent();
   }
 
   // Helper methods
@@ -248,6 +256,7 @@ export default class extends Controller {
     if (this.selectedBands.has(band.id.toString())) return;
 
     this.selectedBands.add(band.id.toString());
+    this.bandsData.set(band.id.toString(), band);
 
     // Add to visual list
     const item = document.createElement("div");
@@ -300,6 +309,9 @@ export default class extends Controller {
     // Update no bands message and count
     this.updateNoBandsMessage();
     this.updateSelectedCount();
+
+    // Emit bands changed event
+    this.emitBandsChangedEvent();
   }
 
   updateNoBandsMessage() {
@@ -316,5 +328,17 @@ export default class extends Controller {
       this.countTarget.style.display =
         this.selectedBands.size > 0 ? "inline-block" : "none";
     }
+  }
+
+  // Emit an event whenever the selected bands change
+  emitBandsChangedEvent() {
+    const selectedBandsArray = Array.from(this.bandsData.values());
+    const event = new CustomEvent("band-selection:changed", {
+      bubbles: true,
+      detail: {
+        bands: selectedBandsArray,
+      },
+    });
+    this.element.dispatchEvent(event);
   }
 }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_27_140002) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_27_140005) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,10 +40,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_27_140002) do
     t.string "name"
     t.datetime "date"
     t.string "venue"
-    t.string "location"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.bigint "venue_id"
+    t.boolean "approved", default: false
+    t.bigint "submitted_by_id"
+    t.index ["submitted_by_id"], name: "index_events_on_submitted_by_id"
     t.index ["venue_id"], name: "index_events_on_venue_id"
   end
 
@@ -55,6 +57,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_27_140002) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "admin", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -83,5 +86,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_27_140002) do
 
   add_foreign_key "band_events", "bands"
   add_foreign_key "band_events", "events"
+  add_foreign_key "events", "users", column: "submitted_by_id"
   add_foreign_key "events", "venues"
 end

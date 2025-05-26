@@ -18,11 +18,6 @@
     </div>
     
     <div class="form-group mb-3">
-      <%= f.label :location, "Location" %>
-      <%= f.text_field :location, class: "form-control", placeholder: "Enter location", required: true %>
-    </div>
-    
-    <div class="form-group mb-3">
       <%= f.label :date, "Date & Time" %>
       <%= f.date_field :date, class: "form-control datetimepicker", placeholder: "Select date and time", required: true %>
     </div>
@@ -31,6 +26,8 @@
       <label class="form-label">Bands</label>
       <%= render 'events/band_selection' %>
     </div>
+    
+    <%= render 'events/band_times_fields' %>
     
     <div class="mt-4">
       <%= f.submit "Create", class: "btn btn-primary px-4" %>
