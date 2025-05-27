@@ -1,6 +1,6 @@
 class BandsController < ApplicationController
   def index
-    @bands = Band.page(params[:page]).per(3) # adjust 6 to however many you want per page
+    @bands = Band.page(params[:page]).per(9) # pagination
   end
 
   def show

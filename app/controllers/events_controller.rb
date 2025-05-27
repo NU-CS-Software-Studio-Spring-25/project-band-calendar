@@ -1,28 +1,28 @@
 class EventsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
-  before_action :authorize_admin!, only: [:approve, :disapprove]
-  
-  def index
-    if params[:pending] && current_user_admin?
-      @events = Event.pending
-      flash.now[:notice] = "Showing pending events awaiting approval."
-    else
-      @events = Event.approved
-    end
-  
-    respond_to do |format|
-      format.html  # Regular HTML page
-      format.json do  # This is for FullCalendar
-        render json: @events.map { |event|
-          {
-            title: event.name,
-            start: event.date.strftime("%Y-%m-%d"),
-            venue: event.venue.name
-          }
+  before_action :authenticate_user!, except: [ :index, :show ]
+  before_action :authorize_admin!, only: [ :approve, :disapprove ]
+
+def index
+  if params[:pending] && current_user_admin?
+    @events = Event.pending.page(params[:page]).per(3)
+    flash.now[:notice] = "Showing pending events awaiting approval."
+  else
+    @events = Event.approved.page(params[:page]).per(3)
+  end
+
+  respond_to do |format|
+    format.html
+    format.json do
+      render json: @events.map { |event|
+        {
+          title: event.name,
+          start: event.date.strftime("%Y-%m-%d"),
+          venue: event.venue.name
         }
-      end
+      }
     end
   end
+end
 
   def show
     @event = Event.find(params[:id])
@@ -38,33 +38,33 @@ class EventsController < ApplicationController
   def create
     @event = Event.new(event_params)
     @event.submitted_by = current_user
-    
+
     # If user is admin, auto-approve the event
     @event.approved = current_user_admin?
-    
+
     if @event.save
       # Handle band associations if band_ids are provided
       if params[:event][:band_ids].present?
         process_band_associations
       end
-      
+
       if @event.approved?
-        redirect_to @event, notice: 'Event was successfully created.'
+        redirect_to @event, notice: "Event was successfully created."
       else
-        redirect_to @event, notice: 'Event was submitted and is awaiting approval.'
+        redirect_to @event, notice: "Event was submitted and is awaiting approval."
       end
     else
       @venues = Venue.all.order(:name)
-      
+
       # Add flash alert for duplicate event
-      if @event.errors[:name].include?('already exists for this date')
+      if @event.errors[:name].include?("already exists for this date")
         flash.now[:alert] = "An event named '#{@event.name}' already exists on #{@event.date&.strftime('%B %d, %Y')}."
       end
-      
+
       render :new, status: :unprocessable_entity
     end
   end
-  
+
   def edit
     @event = Event.find(params[:id])
     authorize_event_edit!
@@ -74,51 +74,51 @@ class EventsController < ApplicationController
   def update
     @event = Event.find(params[:id])
     authorize_event_edit!
-    
+
     # If event is being updated by a non-admin, set approved to false
     unless current_user_admin?
       event_params_with_approval = event_params.merge(approved: false)
     else
       event_params_with_approval = event_params
     end
-    
+
     if @event.update(event_params_with_approval)
       # Update band associations
       @event.band_events.destroy_all
       if params[:event][:band_ids].present?
         process_band_associations
       end
-      
-      redirect_to @event, notice: 'Event was successfully updated.'
+
+      redirect_to @event, notice: "Event was successfully updated."
     else
       @venues = Venue.all.order(:name)
-      
+
       # Add flash alert for duplicate event
-      if @event.errors[:name].include?('already exists for this date')
+      if @event.errors[:name].include?("already exists for this date")
         flash.now[:alert] = "An event named '#{@event.name}' already exists on #{@event.date&.strftime('%B %d, %Y')}."
       end
-      
+
       render :edit, status: :unprocessable_entity
     end
   end
-  
+
   def destroy
     @event = Event.find(params[:id])
     authorize_event_edit!
     @event.destroy
-    redirect_to events_path, notice: 'Event was successfully deleted.', status: :see_other
+    redirect_to events_path, notice: "Event was successfully deleted.", status: :see_other
   end
-  
+
   def approve
     @event = Event.find(params[:id])
     @event.update(approved: true)
-    redirect_to @event, notice: 'Event has been approved.'
+    redirect_to @event, notice: "Event has been approved."
   end
-  
+
   def disapprove
     @event = Event.find(params[:id])
     @event.update(approved: false)
-    redirect_to @event, notice: 'Event has been unapproved.'
+    redirect_to @event, notice: "Event has been unapproved."
   end
 
   private
@@ -126,18 +126,18 @@ class EventsController < ApplicationController
   def event_params
     params.require(:event).permit(:name, :venue_id, :date)
   end
-  
+
   def process_band_associations
     band_times = params[:band_times] || {}
-    
+
     params[:event][:band_ids].reject(&:blank?).each_with_index do |band_id, index|
       # Default position is index + 1
       position = index + 1
-      
+
       # Check if we have timing info for this band
       if band_times[band_id].present?
         times = band_times[band_id]
-        
+
         # Create band_event with timing information
         @event.band_events.create!(
           band_id: band_id,
@@ -155,20 +155,20 @@ class EventsController < ApplicationController
       end
     end
   end
-  
+
   def parse_time(time_str)
     return nil if time_str.blank?
-    
+
     # If the time string already contains the date part, parse directly
-    if time_str.include?('T')
+    if time_str.include?("T")
       return Time.parse(time_str) rescue nil
     end
-    
+
     # Otherwise, combine with the event date
     begin
-      hour, minute = time_str.split(':').map(&:to_i)
+      hour, minute = time_str.split(":").map(&:to_i)
       return nil if hour.nil? || minute.nil?
-      
+
       # Use event date with the provided time
       event_date = @event.date.to_date
       Time.new(event_date.year, event_date.month, event_date.day, hour, minute)
@@ -176,7 +176,7 @@ class EventsController < ApplicationController
       nil
     end
   end
-  
+
   def authorize_event_edit!
     unless current_user_admin? || (@event.submitted_by == current_user)
       flash[:alert] = "You don't have permission to edit this event."

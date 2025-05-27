@@ -78,6 +78,10 @@
     </div>
   <% end %>
 
+  <div class="text-center mt-4">
+  <%= paginate @events %>
+  </div>
+
   <div class="text-center">
     <%= link_to "Add New Event", new_event_path, class: "btn nav-button" %>
   </div>
