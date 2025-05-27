@@ -83,6 +83,11 @@ band_name_suffixes = ['Wolves', 'Dragons', 'Band', 'Orchestra', 'Crew', 'Collect
     else
       "#{Faker::Name.first_name} and the #{band_name_suffixes.sample}"
   end
+
+  # disallow duplicate band names
+  if Band.exists?(name: band_name)
+    next
+  end
   
   Band.create!(
     name: band_name,
