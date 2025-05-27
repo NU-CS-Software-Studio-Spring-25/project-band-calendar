@@ -1,11 +1,11 @@
 class BandsController < ApplicationController
   def index
-    @bands = Band.all
+    @bands = Band.page(params[:page]).per(9) # pagination
   end
 
   def show
     @band = Band.find(params[:id])
-    @events = @band.events
+    @events = @band.events.includes(:venue).where("date >= ?", Date.today).order(date: :asc)
   end
 
   def new
@@ -15,9 +15,9 @@ class BandsController < ApplicationController
   def create
     @band = Band.new(band_params)
     if @band.save
-      redirect_to @band, notice: 'Band was successfully created.'
+      redirect_to @band, notice: "Band was successfully created."
     else
-      if @band.errors[:name].include?('has already been taken')
+      if @band.errors[:name].include?("has already been taken")
         flash.now[:alert] = "A band with the name '#{@band.name}' already exists."
       end
       render :new, status: :unprocessable_entity
@@ -31,9 +31,9 @@ class BandsController < ApplicationController
   def update
     @band = Band.find(params[:id])
     if @band.update(band_params)
-      redirect_to @band, notice: 'Band was successfully updated.'
+      redirect_to @band, notice: "Band was successfully updated."
     else
-      if @band.errors[:name].include?('has already been taken')
+      if @band.errors[:name].include?("has already been taken")
         flash.now[:alert] = "A band with the name '#{@band.name}' already exists."
       end
       render :edit, status: :unprocessable_entity
@@ -43,7 +43,7 @@ class BandsController < ApplicationController
   def destroy
     @band = Band.find(params[:id])
     @band.destroy
-    redirect_to bands_path, notice: 'Band was successfully deleted.', status: :see_other
+    redirect_to bands_path, notice: "Band was successfully deleted.", status: :see_other
   end
 
   private
@@ -51,4 +51,4 @@ class BandsController < ApplicationController
   def band_params
     params.require(:band).permit(:name, :photo_url, :bio)
   end
-end 
+end

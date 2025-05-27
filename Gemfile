@@ -65,7 +65,8 @@ group :test do
 end
 
 gem "devise", "~> 4.9"
-gem 'faker'
+gem "faker"
 
-gem 'dotenv', groups: [:development, :test]
-gem 'rspotify'
+gem "dotenv", groups: [ :development, :test ]
+gem "rspotify"
+gem "kaminari" # Pagination for Active Record collections

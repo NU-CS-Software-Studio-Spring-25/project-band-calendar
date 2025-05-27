@@ -20,12 +20,19 @@ Rails.application.routes.draw do
     collection do
       get :calendar  # 对应 /events/calendar
     end
+    member do
+      patch :approve
+      patch :disapprove
+    end
   end
   resources :bands
+  resources :venues
+  resources :band_events, only: [:create, :update, :destroy]
   
   # Spotify API routes
   get 'spotify/search_artists', to: 'spotify#search_artists'
   get 'spotify/get_artist_info', to: 'spotify#get_artist_info'
+  get '/service_worker.js', to: 'service_worker#index'
   
   root to: "home#index"
 end

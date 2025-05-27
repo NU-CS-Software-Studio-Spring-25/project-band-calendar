@@ -1,0 +1,153 @@
+<div class="container mt-4">
+  <%= render 'shared/flash_messages' %>
+  
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><%= link_to "Venues", venues_path %></li>
+      <li class="breadcrumb-item active" aria-current="page"><%= @venue.name %></li>
+    </ol>
+  </nav>
+  
+  <div class="row">
+    <div class="col-lg-8">
+      <h1 class="mb-2"><%= @venue.name %></h1>
+      <h5 class="text-muted mb-4"><%= @venue.venue_type %></h5>
+      
+      <div class="mb-4">
+        <h5>About This Venue</h5>
+        <div class="card">
+          <div class="card-body">
+            <% if @venue.description.present? %>
+              <p><%= @venue.description %></p>
+            <% else %>
+              <p class="text-muted">No description provided.</p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mb-4">
+        <h5>Upcoming Events</h5>
+        <% if @upcoming_events.any? %>
+          <div class="list-group">
+            <% @upcoming_events.each do |event| %>
+              <%= link_to event_path(event), class: "list-group-item list-group-item-action" do %>
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1"><%= event.name %></h5>
+                  <small><%= event.date.strftime("%b %d, %Y") %></small>
+                </div>
+                <p class="mb-1">
+                  <% if event.bands.any? %>
+                    <%= event.bands.map(&:name).join(", ") %>
+                  <% else %>
+                    <span class="text-muted">No bands announced yet</span>
+                  <% end %>
+                </p>
+              <% end %>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="alert alert-info">
+            No upcoming events scheduled for this venue.
+          </div>
+        <% end %>
+      </div>
+      
+      <% if @past_events.any? %>
+        <div class="mb-4">
+          <h5>Past Events</h5>
+          <div class="list-group">
+            <% @past_events.limit(5).each do |event| %>
+              <%= link_to event_path(event), class: "list-group-item list-group-item-action" do %>
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1"><%= event.name %></h5>
+                  <small><%= event.date.strftime("%b %d, %Y") %></small>
+                </div>
+                <p class="mb-1">
+                  <% if event.bands.any? %>
+                    <%= event.bands.map(&:name).join(", ") %>
+                  <% else %>
+                    <span class="text-muted">No bands listed</span>
+                  <% end %>
+                </p>
+              <% end %>
+            <% end %>
+            
+            <% if @past_events.count > 5 %>
+              <div class="list-group-item text-center">
+                <small class="text-muted">Showing 5 of <%= @past_events.count %> past events</small>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="col-lg-4">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">Venue Information</h5>
+        </div>
+        <div class="card-body">
+          <p class="mb-2">
+            <i class="fas fa-map-marker-alt text-danger me-2"></i>
+            <%= @venue.full_address %>
+          </p>
+          
+          <% if @venue.phone.present? %>
+            <p class="mb-2">
+              <i class="fas fa-phone me-2 text-primary"></i>
+              <%= @venue.phone %>
+            </p>
+          <% end %>
+          
+          <% if @venue.email.present? %>
+            <p class="mb-2">
+              <i class="fas fa-envelope me-2 text-primary"></i>
+              <%= @venue.email %>
+            </p>
+          <% end %>
+          
+          <% if @venue.website.present? %>
+            <p class="mb-3">
+              <i class="fas fa-globe me-2 text-primary"></i>
+              <%= link_to @venue.website, @venue.website, target: "_blank" %>
+            </p>
+          <% end %>
+          
+          <% if @venue.capacity.present? %>
+            <p class="mb-3">
+              <i class="fas fa-users me-2"></i>
+              <strong>Capacity:</strong> <%= @venue.capacity %>
+            </p>
+          <% end %>
+          
+          <div class="d-flex flex-wrap">
+            <% if @venue.accessible %>
+              <span class="badge bg-info text-dark m-1"><i class="fas fa-wheelchair me-1"></i>Accessible</span>
+            <% end %>
+            <% if @venue.all_ages %>
+              <span class="badge bg-success m-1"><i class="fas fa-child me-1"></i>All Ages</span>
+            <% end %>
+            <% if @venue.has_food %>
+              <span class="badge bg-warning text-dark m-1"><i class="fas fa-utensils me-1"></i>Food</span>
+            <% end %>
+            <% if @venue.has_bar %>
+              <span class="badge bg-danger m-1"><i class="fas fa-cocktail me-1"></i>Bar</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-body">
+          <div class="d-grid gap-2">
+            <%= link_to "Edit Venue", edit_venue_path(@venue), class: "btn btn-outline-primary" %>
+            <%= link_to "Add Event at This Venue", new_event_path, class: "btn btn-outline-success" %>
+            <%= link_to "Delete Venue", venue_path(@venue), method: :delete, data: { confirm: "Are you sure? This action cannot be undone." }, class: "btn btn-outline-danger mt-2" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

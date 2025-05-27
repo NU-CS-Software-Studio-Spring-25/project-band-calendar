@@ -1,21 +1,95 @@
 <div class="d-flex justify-content-between align-items-center my-4">
-  <h1 class="m-0">All Events</h1>
-  <%= link_to "View as Calendar", calendar_events_path, class: "btn btn-outline-primary", data: { turbo: false } %>
+  <h1 class="m-0">
+    <% if params[:pending] && current_user_admin? %>
+      Pending Events
+    <% else %>
+      All Events
+    <% end %>
+  </h1>
+  <div class="d-flex justify-content-start align-items-center mb-4 p-3 bg-light rounded shadow-sm" style="max-width: 400px;">
+    <%= form_with url: events_path, method: :get, local: true, class: "w-100 d-flex align-items-center" do |form| %>
+      <%= form.label :month, "Filter by Month:", class: "me-2 mb-0 fw-bold text-dark" %>
+      <%= form.month_field :month, value: params[:month], class: "form-control me-2" %>
+      <%= form.submit "Apply", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+
+
+  <div>
+    <% if current_user_admin? %>
+      <% if params[:pending] %>
+        <%= link_to "Show Approved Events", events_path, class: "btn btn-outline-success me-2" %>
+      <% else %>
+        <%= link_to "Show Pending Events", events_path(pending: true), class: "btn btn-outline-warning me-2" %>
+      <% end %>
+    <% end %>
+    <%= link_to "View as Calendar", calendar_events_path, class: "btn btn-outline-primary", data: { turbo: false } %>
+  </div>
 </div>
 
 <div class="container">
+  <% if @events.empty? %>
+    <div class="alert alert-info">
+      <% if params[:pending] %>
+        No pending events awaiting approval.
+      <% else %>
+        No events found.
+      <% end %>
+    </div>
+  <% end %>
+
   <% @events.each do |event| %>
     <div class="card mb-4 shadow-sm">
       <div class="card-body">
         <h3 class="card-title">
           <%= link_to event.name, event_path(event), class: "text-decoration-none text-primary" %>
+          <% if event.pending? %>
+            <span class="badge bg-warning text-dark">Pending</span>
+          <% end %>
         </h3>
-        <p class="card-text"><strong><%= event.date.strftime("%B %d, %Y") %></strong></p>
-        <p class="card-text"><%= "#{event.venue}, #{event.location}" %></p>
-        <p class="card-text text-muted">Featuring <%= event.bands.count %> bands</p>
+        <p class="card-text"><strong><%= event.date.strftime("%B %d, %Y at %I:%M %p") %></strong></p>
+        <p class="card-text">
+          <strong>Venue:</strong> <%= link_to event.venue.name, venue_path(event.venue), class: "text-decoration-none" %>
+          <% if event.venue.city.present? %>
+            <span class="text-muted">(<%= event.venue.city %><%= ", #{event.venue.state}" if event.venue.state.present? %>)</span>
+          <% end %>
+        </p>
+        <% if event.bands.any? %>
+          <div class="card-text mt-2">
+            <strong>Lineup:</strong>
+            <span>
+              <% event.bands.each_with_index do |band, index| %>
+                <%= link_to band.name, band_path(band), class: "text-decoration-none" %><!--
+                --><%= index < event.bands.size - 1 ? ", " : "" %>
+              <% end %>
+            </span>
+          </div>
+        <% else %>
+          <p class="card-text text-muted">No bands announced yet</p>
+        <% end %>
+        
+        <% if event.submitted_by.present? %>
+          <p class="card-text mt-2 text-muted">
+            <small>Submitted by: <%= event.submitted_by.email %></small>
+          </p>
+        <% end %>
+        
+        <% if current_user_admin? && event.pending? %>
+          <div class="mt-3">
+            <%= button_to "Approve", approve_event_path(event), method: :patch, class: "btn btn-success btn-sm" %>
+          </div>
+        <% elsif current_user_admin? && event.approved? %>
+          <div class="mt-3">
+            <%= button_to "Unapprove", disapprove_event_path(event), method: :patch, class: "btn btn-warning btn-sm" %>
+          </div>
+        <% end %>
       </div>
     </div>
   <% end %>
+
+  <div class="text-center mt-4">
+  <%= paginate @events %>
+  </div>
 
   <div class="text-center">
     <%= link_to "Add New Event", new_event_path, class: "btn nav-button" %>

@@ -10,13 +10,8 @@
     </div>
     
     <div class="form-group mb-3">
-      <%= f.label :venue, "Venue" %>
-      <%= f.text_field :venue, class: "form-control", placeholder: "Enter venue name", required: true %>
-    </div>
-    
-    <div class="form-group mb-3">
-      <%= f.label :location, "Location" %>
-      <%= f.text_field :location, class: "form-control", placeholder: "Enter location", required: true %>
+      <%= f.label :venue_id, "Venue" %>
+      <%= f.collection_select :venue_id, @venues, :id, :name, { prompt: "Select venue" }, { class: "form-select", required: true } %>
     </div>
     
     <div class="form-group mb-3">
@@ -29,6 +24,8 @@
       
       <%= render 'events/band_selection', bands: @event.bands.map { |band| { id: band.id, name: band.name, image_url: band.photo_url } } %>
     </div>
+    
+    <%= render 'events/band_times_fields' %>
     
     <div class="mt-4">
       <%= f.submit "Update", class: "btn btn-primary" %>
