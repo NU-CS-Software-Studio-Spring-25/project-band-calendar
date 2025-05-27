@@ -8,3 +8,4 @@ Rails.application.config.assets.version = "1.0"
 
 # Add SCSS precompilation and properly handle the .scss extension
 Rails.application.config.assets.precompile += %w( application.scss )
+Rails.application.config.assets.precompile += %w( logo.png )
