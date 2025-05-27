@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   # Spotify API routes
   get 'spotify/search_artists', to: 'spotify#search_artists'
   get 'spotify/get_artist_info', to: 'spotify#get_artist_info'
+  get '/service_worker.js', to: 'service_worker#index'
   
   root to: "home#index"
 end
