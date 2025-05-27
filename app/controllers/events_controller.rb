@@ -3,12 +3,22 @@ class EventsController < ApplicationController
   before_action :authorize_admin!, only: [ :approve, :disapprove ]
 
 def index
-  if params[:pending] && current_user_admin?
-    @events = Event.pending.page(params[:page]).per(3)
-    flash.now[:notice] = "Showing pending events awaiting approval."
-  else
-    @events = Event.approved.page(params[:page]).per(3)
+  # Start with base scope (pending or approved)
+  scope = params[:pending] && current_user_admin? ? Event.pending : Event.approved
+
+  # Apply month filter if present
+  if params[:month].present?
+    begin
+      date = Date.strptime(params[:month], "%Y-%m")
+      scope = scope.where(date: date.beginning_of_month..date.end_of_month)
+      flash.now[:notice] = "Showing events for #{date.strftime('%B %Y')}."
+    rescue ArgumentError
+      flash.now[:alert] = "Invalid month format."
+    end
   end
+
+  # Finally, apply pagination to the filtered scope
+  @events = scope.page(params[:page]).per(3)
 
   respond_to do |format|
     format.html
@@ -23,6 +33,8 @@ def index
     end
   end
 end
+
+
 
   def show
     @event = Event.find(params[:id])
