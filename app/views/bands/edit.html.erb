@@ -3,20 +3,25 @@
 
   <%= render 'shared/flash_messages' %>
 
-  <%= form_for @band, html: {class: "needs-validation"} do |f| %>
+  <%= form_for @band, html: {
+    class: "needs-validation", 
+    "data-controller": "form-validation", 
+    "data-form-validation-target": "form",
+    "data-form-validation-submitting-text-value": "Updating..."
+  } do |f| %>
     <div class="form-group mb-3">
       <%= f.label :name, "Band Name" %>
-      <%= f.text_field :name, class: "form-control", placeholder: "Enter band name", required: true %>
+      <%= f.text_field :name, class: "form-control", placeholder: "Enter band name", required: true, id: "band_name" %>
     </div>
     
     <div class="form-group mb-3">
       <%= f.label :photo_url, "Photo URL" %>
-      <%= f.text_field :photo_url, class: "form-control", placeholder: "Enter photo URL (optional)" %>
+      <%= f.url_field :photo_url, class: "form-control", placeholder: "Enter photo URL (optional)", id: "band_photo_url" %>
     </div>
     
     <div class="form-group mb-3">
       <%= f.label :bio, "Biography" %>
-      <%= f.text_area :bio, class: "form-control", rows: 4, placeholder: "Enter band biography" %>
+      <%= f.text_area :bio, class: "form-control", rows: 4, placeholder: "Enter band biography", maxlength: "1000", id: "band_bio" %>
     </div>
     
     <div class="mt-4">
