@@ -3,12 +3,17 @@
 
   <%= render 'shared/flash_messages' %>
 
-  <%= form_for @venue, html: {class: "needs-validation"} do |f| %>
+  <%= form_for @venue, html: {
+    class: "needs-validation", 
+    "data-controller": "form-validation", 
+    "data-form-validation-target": "form",
+    "data-form-validation-submitting-text-value": "Creating..."
+  } do |f| %>
     <div class="row">
       <div class="col-md-6">
         <div class="form-group mb-3">
           <%= f.label :name, "Venue Name" %>
-          <%= f.text_field :name, class: "form-control", placeholder: "Enter venue name", required: true %>
+          <%= f.text_field :name, class: "form-control", placeholder: "Enter venue name", required: true, id: "venue_name" %>
         </div>
         
         <div class="form-group mb-3">
@@ -21,79 +26,79 @@
             ["Stadium", "Stadium"],
             ["Outdoor", "Outdoor"],
             ["Other", "Other"]
-          ], { prompt: "Select venue type" }, { class: "form-select" } %>
+          ], { prompt: "Select venue type" }, { class: "form-select", id: "venue_venue_type" } %>
         </div>
 
         <div class="form-group mb-3">
           <%= f.label :street_address, "Street Address" %>
-          <%= f.text_field :street_address, class: "form-control", placeholder: "Enter street address" %>
+          <%= f.text_field :street_address, class: "form-control", placeholder: "Enter street address", id: "venue_street_address" %>
         </div>
 
         <div class="form-group mb-3">
           <%= f.label :city, "City" %>
-          <%= f.text_field :city, class: "form-control", placeholder: "Enter city", required: true %>
+          <%= f.text_field :city, class: "form-control", placeholder: "Enter city", required: true, id: "venue_city" %>
         </div>
 
         <div class="form-group mb-3">
           <%= f.label :state, "State/Province" %>
-          <%= f.text_field :state, class: "form-control", placeholder: "Enter state or province" %>
+          <%= f.text_field :state, class: "form-control", placeholder: "Enter state or province", id: "venue_state" %>
         </div>
 
         <div class="form-group mb-3">
           <%= f.label :postal_code, "Postal Code" %>
-          <%= f.text_field :postal_code, class: "form-control", placeholder: "Enter postal code" %>
+          <%= f.text_field :postal_code, class: "form-control", placeholder: "Enter postal code", id: "venue_postal_code" %>
         </div>
 
         <div class="form-group mb-3">
           <%= f.label :country, "Country" %>
-          <%= f.text_field :country, class: "form-control", placeholder: "Enter country", required: true %>
+          <%= f.text_field :country, class: "form-control", placeholder: "Enter country", required: true, id: "venue_country" %>
         </div>
       </div>
       
       <div class="col-md-6">
         <div class="form-group mb-3">
           <%= f.label :capacity, "Capacity" %>
-          <%= f.number_field :capacity, class: "form-control", placeholder: "Enter venue capacity" %>
+          <%= f.number_field :capacity, class: "form-control", placeholder: "Enter venue capacity", min: "1", id: "venue_capacity" %>
         </div>
 
         <div class="form-group mb-3">
           <%= f.label :website, "Website" %>
-          <%= f.url_field :website, class: "form-control", placeholder: "Enter venue website" %>
+          <%= f.url_field :website, class: "form-control", placeholder: "Enter venue website", id: "venue_website" %>
         </div>
 
         <div class="form-group mb-3">
           <%= f.label :phone, "Phone" %>
-          <%= f.telephone_field :phone, class: "form-control", placeholder: "Enter phone number" %>
+          <%= f.telephone_field :phone, class: "form-control", placeholder: "Enter phone number", id: "venue_phone" %>
         </div>
 
         <div class="form-group mb-3">
           <%= f.label :email, "Email" %>
-          <%= f.email_field :email, class: "form-control", placeholder: "Enter email address" %>
+          <%= f.email_field :email, class: "form-control", placeholder: "Enter email address", id: "venue_email" %>
         </div>
 
         <div class="form-group mb-3">
           <%= f.label :description, "Description" %>
-          <%= f.text_area :description, class: "form-control", placeholder: "Enter venue description", rows: 4 %>
+          <%= f.text_area :description, class: "form-control", placeholder: "Enter venue description", rows: 4, maxlength: "500", id: "venue_description" %>
         </div>
         
         <div class="form-group mb-3">
           <div class="form-check form-check-inline">
-            <%= f.check_box :accessible, class: "form-check-input" %>
+            <%= f.check_box :accessible, class: "form-check-input", id: "venue_accessible" %>
             <%= f.label :accessible, "Accessible", class: "form-check-label" %>
           </div>
           
           <div class="form-check form-check-inline">
-            <%= f.check_box :all_ages, class: "form-check-input" %>
+            <%= f.check_box :all_ages, class: "form-check-input", id: "venue_all_ages" %>
             <%= f.label :all_ages, "All Ages", class: "form-check-label" %>
           </div>
           
           <div class="form-check form-check-inline">
-            <%= f.check_box :has_food, class: "form-check-input" %>
+            <%= f.check_box :has_food, class: "form-check-input", id: "venue_has_food" %>
             <%= f.label :has_food, "Food Available", class: "form-check-label" %>
           </div>
           
           <div class="form-check form-check-inline">
-            <%= f.check_box :has_bar, class: "form-check-input" %>
+            <%= f.check_box :has_bar, class: "form-check-input", id: "venue_has_bar" %>
             <%= f.label :has_bar, "Bar Available", class: "form-check-label" %>
           </div>
         </div>
