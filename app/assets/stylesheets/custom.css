@@ -1,134 +1,287 @@
 body {
-    background: url('magicpattern-65O4Dw6-xLg-unsplash.jpg');
-    font-family: 'Questrial', 'Helvetica Neue', sans-serif;
-    color: white;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    min-height: 100vh;
-  }
-  
-  .auth-card {
-    background: white;
-    padding: 2rem;
-    border-radius: 1rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  h2 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    color: white;
-  }
-  
-  .custom-login-btn {
-    background-color: transparent;
-    border: 1px solid white;
-    color: white;
-    border-radius: 999px;
-    transition: background-color 0.3s, color 0.3s;
-  }
-  
-  .custom-login-btn:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-    border-color: white;
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
-  }
+  background: url("magicpattern-65O4Dw6-xLg-unsplash.jpg");
+  font-family: "Questrial", "Helvetica Neue", sans-serif;
+  color: white;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
 
-  .brand-offset {
-    margin-left: 12%;
-  }
+.auth-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
 
-  .devise-links a {
-    color: white;
-    text-decoration: none;
-    margin: 0 10px;
-  }
-  
-  .devise-links a:hover {
-    text-decoration: underline;
-  }
+h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: white;
+}
 
-  .nav-button {
-    background-color: transparent;
-    border: 1px solid white;
-    color: white !important;
-    border-radius: 999px;
-    padding: 6px 16px;
-    margin-left: 6px;
-    transition: background-color 0.3s, color 0.3s, border 0.3s;
-    text-decoration: none;
-    display: inline-block;
-  }
-  
-  .nav-button:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white !important;
-    border-color: white;
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
-  }
+.custom-login-btn {
+  background-color: transparent;
+  border: 1px solid white;
+  color: white;
+  border-radius: 999px;
+  transition: background-color 0.3s, color 0.3s;
+}
 
-  .cancel-button {
-    background-color: transparent;
-    border: 1px solid white;
-    color: white !important;
-    border-radius: 999px;
-    padding: 6px 16px;
-    margin-left: 6px;
-    transition: background-color 0.3s, color 0.3s, border 0.3s;
-    text-decoration: none;
-    display: inline-block;
-  }
-  
-  .cancel-button:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white !important;
-    border-color: white;
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
-  }
+.custom-login-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-color: white;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
 
-  .welcome-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    min-height: 80vh;
-    color: white;
-  }
-  
-  .welcome-section h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .welcome-section p {
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
-  }
+.brand-offset {
+  margin-left: 12%;
+}
 
-  .auth-page {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 80vh;
-    padding-top: 4vh; /* tweak if needed */
-  }
-  
-  .auth-page h2 {
-    color: white;
-    text-align: center;
-    margin-bottom: 2rem;
-  }
+.devise-links a {
+  color: white;
+  text-decoration: none;
+  margin: 0 10px;
+}
 
-  .footer {
-    position: relative;
-    bottom: 0;
-    width: 100%;
-    margin-top: 3%;
-    margin-bottom: 2%;
-    margin-left: 47%;
-    color: white;
+.devise-links a:hover {
+  text-decoration: underline;
+}
+
+.nav-button {
+  background-color: transparent;
+  border: 1px solid white;
+  color: white !important;
+  border-radius: 999px;
+  padding: 6px 16px;
+  margin-left: 6px;
+  transition: background-color 0.3s, color 0.3s, border 0.3s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.nav-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white !important;
+  border-color: white;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.cancel-button {
+  background-color: transparent;
+  border: 1px solid white;
+  color: white !important;
+  border-radius: 999px;
+  padding: 6px 16px;
+  margin-left: 6px;
+  transition: background-color 0.3s, color 0.3s, border 0.3s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.cancel-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white !important;
+  border-color: white;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.welcome-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 80vh;
+  color: white;
+}
+
+.welcome-section h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.welcome-section p {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.auth-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 80vh;
+  padding-top: 4vh; /* tweak if needed */
+}
+
+.auth-page h2 {
+  color: white;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  margin-top: 3%;
+  margin-bottom: 2%;
+  margin-left: 47%;
+  color: white;
+}
+
+/* Form Validation Styles */
+.form-control.is-valid {
+  border-color: #28a745;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%2328a745' d='m2.3 6.73.99-.99-2.22-2.2.68-.68L4 5.04l3.14-3.14.68.68z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+  padding-right: calc(1.5em + 0.75rem);
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 4.6 1.4 1.4m0 0 1.4 1.4m-1.4-1.4L5.8 8.4m1.4-1.4L8.6 5.6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+  padding-right: calc(1.5em + 0.75rem);
+}
+
+.form-select.is-valid {
+  border-color: #28a745;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e"),
+    url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%2328a745' d='m2.3 6.73.99-.99-2.22-2.2.68-.68L4 5.04l3.14-3.14.68.68z'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center, center right 2.25rem;
+  background-size: 16px 12px, calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+  padding-right: calc(0.75em + 2.3125rem);
+}
+
+.form-select.is-invalid {
+  border-color: #dc3545;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e"),
+    url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 4.6 1.4 1.4m0 0 1.4 1.4m-1.4-1.4L5.8 8.4m1.4-1.4L8.6 5.6'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center, center right 2.25rem;
+  background-size: 16px 12px, calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+  padding-right: calc(0.75em + 2.3125rem);
+}
+
+.invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #dc3545;
+  font-weight: 500;
+}
+
+.valid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #28a745;
+}
+
+/* Animations for validation feedback */
+.invalid-feedback {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%,
+  20%,
+  40%,
+  60%,
+  80%,
+  100% {
+    transform: translateX(0);
   }
-  
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-2px);
+  }
+}
+
+/* Form submission states */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn.submitting {
+  position: relative;
+  color: transparent;
+}
+
+.btn.submitting::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -0.5rem;
+  margin-top: -0.5rem;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Band Selection Validation Styles */
+.card.is-invalid {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.card.is-valid {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.band-selection-error {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #dc3545;
+  font-weight: 500;
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Enhanced form validation states */
+.form-control:focus.is-invalid {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.form-control:focus.is-valid {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.form-select:focus.is-invalid {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.form-select:focus.is-valid {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
