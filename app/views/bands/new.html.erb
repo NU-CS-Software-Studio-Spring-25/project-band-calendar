@@ -1,32 +1,32 @@
 <div class="container mt-4">
-  <h1>Add New Band</h1>
+  <h1 class="text-white">Add New Band</h1> 
 
   <%= render 'shared/flash_messages' %>
 
   <%= form_for @band, html: {
-    class: "needs-validation", 
-    "data-controller": "form-validation", 
+    class: "needs-validation",
+    "data-controller": "form-validation",
     "data-form-validation-target": "form",
     "data-form-validation-submitting-text-value": "Creating..."
   } do |f| %>
     <div class="form-group mb-3">
-      <%= f.label :name, "Band Name" %>
+      <%= f.label :name, "Band Name", class: "text-white" %> 
       <%= f.text_field :name, class: "form-control", placeholder: "Enter band name", required: true, id: "band_name" %>
     </div>
-    
+
     <div class="form-group mb-3">
-      <%= f.label :photo_url, "Photo URL" %>
+      <%= f.label :photo_url, "Photo URL", class: "text-white" %> 
       <%= f.url_field :photo_url, class: "form-control", placeholder: "Enter photo URL (optional)", id: "band_photo_url" %>
     </div>
-    
+
     <div class="form-group mb-3">
-      <%= f.label :bio, "Biography" %>
+      <%= f.label :bio, "Biography", class: "text-white" %> 
       <%= f.text_area :bio, class: "form-control", rows: 4, placeholder: "Enter band biography", maxlength: "1000", id: "band_bio" %>
     </div>
-    
+
     <div class="mt-4">
       <%= f.submit "Create", class: "btn nav-button" %>
       <%= link_to "Cancel", bands_path, class: "btn cancel-button ms-2" %>
     </div>
   <% end %>
-</div> 
+</div>

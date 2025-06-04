@@ -1,5 +1,5 @@
 <div class="container mt-4">
-  <h1>Add New Event</h1>
+  <h1 class="text-white">Add New Event</h1>
 
   <%= render 'shared/flash_messages' %>
 
@@ -10,12 +10,12 @@
     "data-form-validation-submitting-text-value": "Creating..."
   } do |f| %>
     <div class="form-group mb-3">
-      <%= f.label :name, "Event Name" %>
+      <%= f.label :name, "Event Name", class: "text-white"%>
       <%= f.text_field :name, class: "form-control", placeholder: "Enter event name", required: true, id: "event_name" %>
     </div>
     
     <div class="form-group mb-3">
-      <%= f.label :venue_id, "Venue" %>
+      <%= f.label :venue_id, "Venue", class: "text-white"%>
       <div class="d-flex">
         <%= f.collection_select :venue_id, @venues, :id, :display_name, { prompt: "Select venue" }, { class: "form-select me-2", required: true, id: "event_venue_id" } %>
         <%= link_to "Add New Venue", new_venue_path, class: "btn btn-outline-primary" %>
@@ -23,12 +23,12 @@
     </div>
     
     <div class="form-group mb-3">
-      <%= f.label :date, "Date & Time" %>
+      <%= f.label :date, "Date & Time", class: "text-white"%>
       <%= f.date_field :date, class: "form-control datetimepicker", placeholder: "Select date and time", required: true, id: "event_date", min: Date.current.strftime("%Y-%m-%d") %>
     </div>
     
     <div class="form-group mb-4">
-      <label class="form-label">Bands</label>
+      <label class="form-label text-white">Bands</label>
       <%= render 'events/band_selection' %>
     </div>
     
