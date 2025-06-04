@@ -3,23 +3,28 @@
 
   <%= render 'shared/flash_messages' %>
 
-  <%= form_for @event, html: {class: "needs-validation"} do |f| %>
+  <%= form_for @event, html: {
+    class: "needs-validation", 
+    "data-controller": "form-validation", 
+    "data-form-validation-target": "form",
+    "data-form-validation-submitting-text-value": "Creating..."
+  } do |f| %>
     <div class="form-group mb-3">
       <%= f.label :name, "Event Name" %>
-      <%= f.text_field :name, class: "form-control", placeholder: "Enter event name", required: true %>
+      <%= f.text_field :name, class: "form-control", placeholder: "Enter event name", required: true, id: "event_name" %>
     </div>
     
     <div class="form-group mb-3">
       <%= f.label :venue_id, "Venue" %>
       <div class="d-flex">
-        <%= f.collection_select :venue_id, @venues, :id, :display_name, { prompt: "Select venue" }, { class: "form-select me-2", required: true } %>
+        <%= f.collection_select :venue_id, @venues, :id, :display_name, { prompt: "Select venue" }, { class: "form-select me-2", required: true, id: "event_venue_id" } %>
         <%= link_to "Add New Venue", new_venue_path, class: "btn btn-outline-primary" %>
       </div>
     </div>
     
     <div class="form-group mb-3">
       <%= f.label :date, "Date & Time" %>
-      <%= f.date_field :date, class: "form-control datetimepicker", placeholder: "Select date and time", required: true %>
+      <%= f.date_field :date, class: "form-control datetimepicker", placeholder: "Select date and time", required: true, id: "event_date", min: Date.current.strftime("%Y-%m-%d") %>
     </div>
     
     <div class="form-group mb-4">
