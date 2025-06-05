@@ -23,7 +23,7 @@
         <%= link_to "Show Pending Events", events_path(pending: true), class: "btn btn-outline-warning me-2" %>
       <% end %>
     <% end %>
-    <%= link_to "View as Calendar", calendar_events_path, class: "btn btn-outline-primary", data: { turbo: false } %>
+    <%= link_to "View as Calendar", calendar_events_path, class: "btn btn-outline-light", data: { turbo: false } %>
   </div>
 </div>
 
@@ -92,6 +92,6 @@
   </div>
 
   <div class="text-center">
-    <%= link_to "Add New Event", new_event_path, class: "btn nav-button" %>
+    <%= link_to "Add New Event", new_event_path, class: "btn btn-outline-light" %>
   </div>
 </div>

@@ -6,21 +6,21 @@
       <div class="col-md-6">
         <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
           <div class="mb-3">
-            <%= f.label :email, class: "form-label" %>
+            <%= f.label :email, class: "form-label text-white" %>
             <%= f.email_field :email, autofocus: true, class: "form-control" %>
           </div>
 
           <div class="mb-3">
-            <%= f.label :password, class: "form-label" %>
+            <%= f.label :password, class: "form-label text-white" %>
             <%= f.password_field :password, autocomplete: "new-password", class: "form-control" %>
           </div>
 
           <div class="mb-3">
-            <%= f.label :password_confirmation, class: "form-label" %>
+            <%= f.label :password_confirmation, class: "form-label text-white" %>
             <%= f.password_field :password_confirmation, class: "form-control" %>
           </div>
 
-          <%= f.submit "Sign up", class: "btn custom-login-btn w-100" %>
+          <%= f.submit "Sign up", class: "btn btn-outline-light w-100" %>
         <% end %>
 
         <%= render "devise/shared/links" %>

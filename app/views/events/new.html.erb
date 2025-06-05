@@ -18,7 +18,7 @@
       <%= f.label :venue_id, "Venue", class: "text-white"%>
       <div class="d-flex">
         <%= f.collection_select :venue_id, @venues, :id, :display_name, { prompt: "Select venue" }, { class: "form-select me-2", required: true, id: "event_venue_id" } %>
-        <%= link_to "Add New Venue", new_venue_path, class: "btn btn-outline-primary" %>
+        <%= link_to "Add New Venue", new_venue_path, class: "btn btn-outline-light" %>
       </div>
     </div>
     
