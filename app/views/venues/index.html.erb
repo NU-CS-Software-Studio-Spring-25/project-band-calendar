@@ -51,7 +51,7 @@
     
     <% if @venues.empty? %>
       <div class="col-12">
-        <div class="alert alert-info">
+        <div class="alert alert-info" role="status" aria-live="polite">
           No venues have been added yet. <%= link_to "Add your first venue", new_venue_path %>.
         </div>
       </div>

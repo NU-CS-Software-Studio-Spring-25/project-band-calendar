@@ -31,7 +31,7 @@
         <% if @upcoming_events.any? %>
           <div class="list-group">
             <% @upcoming_events.each do |event| %>
-              <%= link_to event_path(event), class: "list-group-item list-group-item-action" do %>
+              <%= link_to event_path(event), class: "list-group-item list-group-item-action", aria: { label: "View details for event #{event.name} on #{event.date.strftime('%B %d, %Y')}" } do %>
                 <div class="d-flex w-100 justify-content-between">
                   <h5 class="mb-1"><%= event.name %></h5>
                   <small><%= event.date.strftime("%b %d, %Y") %></small>
@@ -58,7 +58,7 @@
           <h5>Past Events</h5>
           <div class="list-group">
             <% @past_events.limit(5).each do |event| %>
-              <%= link_to event_path(event), class: "list-group-item list-group-item-action" do %>
+              <%= link_to event_path(event), class: "list-group-item list-group-item-action", aria: { label: "View details for event #{event.name} on #{event.date.strftime('%B %d, %Y')} featuring #{event.bands.map(&:name).join(', ')}" } do %>
                 <div class="d-flex w-100 justify-content-between">
                   <h5 class="mb-1"><%= event.name %></h5>
                   <small><%= event.date.strftime("%b %d, %Y") %></small>
@@ -111,7 +111,7 @@
           <% if @venue.website.present? %>
             <p class="mb-3">
               <i class="fas fa-globe me-2 text-primary"></i>
-              <%= link_to @venue.website, @venue.website, target: "_blank" %>
+              <%= link_to @venue.website, @venue.website, target: "_blank", rel: "noopener noreferrer", aria: { label: "Open external link to #{@venue.website} in a new tab" } %>
             </p>
           <% end %>
           

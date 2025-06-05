@@ -17,7 +17,7 @@
             <% if @events.any? %>
               <div class="list-group">
                 <% @events.each do |event| %>
-                  <%= link_to event_path(event), class: "list-group-item list-group-item-action" do %>
+                  <%= link_to event_path(event), class: "list-group-item list-group-item-action",aria: { label: "View details for event #{event.name} on #{event.date.strftime('%B %d, %Y')}" } do %>
                     <div class="d-flex w-100 justify-content-between">
                       <h5 class="mb-1"><%= event.name %></h5>
                       <small><%= event.date.strftime("%B %d, %Y at %I:%M %p") %></small>

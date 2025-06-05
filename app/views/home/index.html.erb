@@ -15,7 +15,7 @@
                 <input type="date" name="date" value="<%= @date.strftime('%Y-%m-%d') %>" class="form-control form-control-sm" onchange="this.form.submit()" />
               </form>
               
-              <%= link_to date: @date.tomorrow, class: "btn btn-sm btn-outline-secondary" do %>
+              <%= link_to date: @date.tomorrow, class: "btn btn-sm btn-outline-secondary",aria: { label: "Next day" } do %>
                 <i class="fas fa-chevron-right"></i>
               <% end %>
             </div>
@@ -54,7 +54,7 @@
                     <div class="list-group-item list-group-item-action">
                       <div class="d-flex justify-content-between align-items-start">
                         <div>
-                          <h4 class="h6 mb-1"><%= link_to event.name, event_path(event), class: "text-decoration-none" %></h4>
+                          <%= link_to event.name, event_path(event),class: "text-decoration-none", aria: { label: "View details for event #{event.name}" } %>
                           <div class="small text-muted">
                             <i class="far fa-clock me-1"></i>
                             <%= event.date.strftime('%I:%M %p') %>
