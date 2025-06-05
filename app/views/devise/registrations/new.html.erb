@@ -7,17 +7,17 @@
         <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
           <div class="mb-3">
             <%= f.label :email, class: "form-label" %>
-            <%= f.email_field :email, autofocus: true, class: "form-control" %>
+            <%= f.email_field :email, autofocus: true, class: "form-control", "aria-label": "Email address" %>
           </div>
 
           <div class="mb-3">
             <%= f.label :password, class: "form-label" %>
-            <%= f.password_field :password, autocomplete: "new-password", class: "form-control" %>
+            <%= f.password_field :password, autocomplete: "new-password", class: "form-control", "aria-label": "Password" %>
           </div>
 
           <div class="mb-3">
             <%= f.label :password_confirmation, class: "form-label" %>
-            <%= f.password_field :password_confirmation, class: "form-control" %>
+            <%= f.password_field :password_confirmation, class: "form-control", "aria-label": "Confirm password" %>
           </div>
 
           <%= f.submit "Sign up", class: "btn custom-login-btn w-100", "aria-label": "Create new account" %>

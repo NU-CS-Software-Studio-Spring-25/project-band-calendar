@@ -11,17 +11,17 @@
   } do |f| %>
     <div class="form-group mb-3">
       <%= f.label :name, "Band Name" %>
-      <%= f.text_field :name, class: "form-control", placeholder: "Enter band name", required: true, id: "band_name" %>
+      <%= f.text_field :name, class: "form-control", placeholder: "Enter band name", required: true, id: "band_name", "aria-label": "Band name" %>
     </div>
     
     <div class="form-group mb-3">
       <%= f.label :photo_url, "Photo URL" %>
-      <%= f.url_field :photo_url, class: "form-control", placeholder: "Enter photo URL (optional)", id: "band_photo_url" %>
+      <%= f.url_field :photo_url, class: "form-control", placeholder: "Enter photo URL (optional)", id: "band_photo_url", "aria-label": "Band photo URL" %>
     </div>
     
     <div class="form-group mb-3">
       <%= f.label :bio, "Biography" %>
-      <%= f.text_area :bio, class: "form-control", rows: 4, placeholder: "Enter band biography", maxlength: "1000", id: "band_bio" %>
+      <%= f.text_area :bio, class: "form-control", rows: 4, placeholder: "Enter band biography", maxlength: "1000", id: "band_bio", "aria-label": "Band biography" %>
     </div>
     
     <div class="mt-4">

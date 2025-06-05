@@ -12,7 +12,7 @@
               <% end %>
               
               <form class="d-flex me-2" action="<%= root_path %>" method="get">
-                <input type="date" name="date" value="<%= @date.strftime('%Y-%m-%d') %>" class="form-control form-control-sm" onchange="this.form.submit()" />
+                <input type="date" name="date" value="<%= @date.strftime('%Y-%m-%d') %>" class="form-control form-control-sm" onchange="this.form.submit()" aria-label="Select date to view events" />
               </form>
               
               <%= link_to date: @date.tomorrow, class: "btn btn-sm btn-outline-secondary", "aria-label": "Go to next day (#{@date.tomorrow.strftime('%B %d, %Y')})" do %>

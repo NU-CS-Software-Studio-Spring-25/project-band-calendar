@@ -9,7 +9,7 @@
   <div class="d-flex justify-content-start align-items-center mb-4 p-3 bg-light rounded shadow-sm" style="max-width: 400px;">
     <%= form_with url: events_path, method: :get, local: true, class: "w-100 d-flex align-items-center" do |form| %>
       <%= form.label :month, "Filter by Month:", class: "me-2 mb-0 fw-bold text-dark" %>
-      <%= form.month_field :month, value: params[:month], class: "form-control me-2" %>
+      <%= form.month_field :month, value: params[:month], class: "form-control me-2", "aria-label": "Select month to filter events" %>
       <%= form.submit "Apply", class: "btn btn-primary", "aria-label": "Apply month filter to events" %>
     <% end %>
   </div>

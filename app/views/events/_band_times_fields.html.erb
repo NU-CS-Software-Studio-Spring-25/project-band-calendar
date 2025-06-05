@@ -21,24 +21,28 @@
                 <div class="col-md-3 mb-3">
                   <label class="form-label">Set Position</label>
                   <input type="number" name="band_times[<%= band_event.band_id %>][set_position]" 
-                         class="form-control" value="<%= band_event.set_position %>" min="1">
+                         class="form-control" value="<%= band_event.set_position %>" min="1"
+                         aria-label="Set position for <%= band_event.band.name %>">
                 </div>
                 <div class="col-md-3 mb-3">
                   <label class="form-label">Start Time</label>
                   <input type="time" name="band_times[<%= band_event.band_id %>][start_time]" 
                          class="form-control" 
-                         value="<%= band_event.start_time&.strftime('%H:%M') %>">
+                         value="<%= band_event.start_time&.strftime('%H:%M') %>"
+                         aria-label="Start time for <%= band_event.band.name %>">
                 </div>
                 <div class="col-md-3 mb-3">
                   <label class="form-label">End Time</label>
                   <input type="time" name="band_times[<%= band_event.band_id %>][end_time]" 
                          class="form-control"
-                         value="<%= band_event.end_time&.strftime('%H:%M') %>">
+                         value="<%= band_event.end_time&.strftime('%H:%M') %>"
+                         aria-label="End time for <%= band_event.band.name %>">
                 </div>
                 <div class="col-md-12">
                   <label class="form-label">Notes</label>
                   <textarea name="band_times[<%= band_event.band_id %>][notes]" 
-                            class="form-control" rows="2"><%= band_event.notes %></textarea>
+                            class="form-control" rows="2"
+                            aria-label="Performance notes for <%= band_event.band.name %>"><%= band_event.notes %></textarea>
                 </div>
               </div>
             </div>
