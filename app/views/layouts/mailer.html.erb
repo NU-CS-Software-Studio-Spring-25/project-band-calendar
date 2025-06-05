@@ -1,13 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email from NoteSync</title>
     <style>
-      /* Email styles need to be inline */
+      /* Keep styles minimal for email compatibility */
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #333;
+        background-color: #ffffff;
+        padding: 20px;
+      }
+
+      .email-container {
+        max-width: 600px;
+        margin: 0 auto;
+      }
     </style>
   </head>
 
-  <body>
-    <%= yield %>
+  <body role="document">
+    <div class="email-container">
+      <%= yield %>
+    </div>
   </body>
 </html>

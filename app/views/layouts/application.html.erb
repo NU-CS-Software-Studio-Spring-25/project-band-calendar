@@ -10,23 +10,22 @@
 
     <%= yield :head %>
 
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-
     <%= stylesheet_link_tag "custom", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "band_selection", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <%= tag.link rel: 'manifest', href: '/manifest.json' %>
-    <%= tag.meta name: "theme-color", content: "#317EFB" %>
+    <link rel="icon" href="/logo.png" type="image/png" />
 
     <style>
       .submit-event-btn {
@@ -42,72 +41,62 @@
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
       }
     </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <%= tag.link rel: 'manifest', href: '/manifest.json' %>
+    <%= tag.meta name: "theme-color", content: "#317EFB" %>
   </head>
 
   <body>
-    <header>
-      <nav class="navbar navbar-expand-lg navbar-dark transparent-navbar mb-4">
-        <div class="container">
-          <%= link_to "NoteSync", root_path, class: "navbar-brand brand-offset", aria: { label: "Homepage - NoteSync" } %>
+    <nav class="navbar navbar-expand-lg navbar-dark transparent-navbar mb-4" role="navigation" aria-label="Main navigation">
+      <div class="container-fluid">
+        <%= link_to "NoteSync", root_path, class: "navbar-brand brand-offset" %>
 
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-              <li class="nav-item">
-                <%= link_to "Events", events_path, class: "nav-link" %>
-              </li>
-              <li class="nav-item">
-                <%= link_to "Bands", bands_path, class: "nav-link" %>
-              </li>
-              <li class="nav-item">
-                <%= link_to "Venues", venues_path, class: "nav-link" %>
-              </li>
-            </ul>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item"><%= link_to "Events", events_path, class: "nav-link" %></li>
+            <li class="nav-item"><%= link_to "Bands", bands_path, class: "nav-link" %></li>
+            <li class="nav-item"><%= link_to "Venues", venues_path, class: "nav-link" %></li>
+          </ul>
 
-            <div class="d-flex align-items-center">
-              <%= link_to new_event_path, class: "submit-event-btn btn btn-warning me-3" do %>
-                <i class="fas fa-plus-circle me-1"></i> 
-                <% if current_user_admin? %>
-                  Add Event
-                <% else %>
-                  Submit Event
-                <% end %>
+          <div class="d-flex align-items-center">
+            <%= link_to new_event_path, class: "submit-event-btn btn btn-warning me-3" do %>
+              <i class="fas fa-plus-circle me-1"></i>
+              <% if current_user_admin? %>
+                Add Event
+              <% else %>
+                Submit Event
               <% end %>
-              
-              <ul class="navbar-nav">
-                <% if user_signed_in? %>
-                  <% if current_user_admin? %>
-                    <li class="nav-item">
-                      <%= link_to "Pending Events", events_path(pending: true), class: "nav-link" %>
-                    </li>
-                  <% end %>
-                  <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                      <%= current_user.email %>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end">
-                      <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "dropdown-item" %>
-                    </div>
-                  </li>
-                <% else %>
-                  <li class="nav-item">
-                    <%= link_to "Login", new_user_session_path, class: "nav-link" %>
-                  </li>
-                  <li class="nav-item">
-                    <%= link_to "Sign Up", new_user_registration_path, class: "nav-link" %>
-                  </li>
+            <% end %>
+
+            <ul class="navbar-nav">
+              <% if user_signed_in? %>
+                <% if current_user_admin? %>
+                  <li class="nav-item"><%= link_to "Pending Events", events_path(pending: true), class: "nav-link" %></li>
                 <% end %>
-              </ul>
-            </div>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                    <%= current_user.email %>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-end">
+                    <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "dropdown-item" %>
+                  </div>
+                </li>
+              <% else %>
+                <li class="nav-item"><%= link_to "Login", new_user_session_path, class: "nav-link" %></li>
+                <li class="nav-item"><%= link_to "Sign Up", new_user_registration_path, class: "nav-link" %></li>
+              <% end %>
+            </ul>
           </div>
         </div>
-      </nav>
-    </header>
+      </div>
+    </nav>
 
-    <main class="container">
+    <main class="container" role="main">
       <% if flash[:notice] %>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
           <%= flash[:notice] %>
@@ -124,10 +113,6 @@
       <%= yield %>
     </main>
 
-    <footer class="footer text-center mt-4">
-      Designed 2025
-    </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
     <script>
@@ -141,4 +126,8 @@
       }
     </script>
   </body>
+
+  <div class="footer">
+    Designed 2025
+  </div>
 </html>
