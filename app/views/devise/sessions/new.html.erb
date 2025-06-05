@@ -7,20 +7,20 @@
         <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
           <div class="mb-3">
             <%= f.label :email, class: "form-label" %>
-            <%= f.email_field :email, autofocus: true, class: "form-control", "aria-label": "Email address" %>
+            <%= f.email_field :email, autofocus: true, class: "form-control", "aria-label": "Email address", tabindex: 1 %>
           </div>
 
           <div class="mb-3">
             <%= f.label :password, class: "form-label" %>
-            <%= f.password_field :password, autocomplete: "current-password", class: "form-control", "aria-label": "Password" %>
+            <%= f.password_field :password, autocomplete: "current-password", class: "form-control", "aria-label": "Password", tabindex: 2 %>
           </div>
 
           <div class="mb-3 form-check">
-            <%= f.check_box :remember_me, class: "form-check-input", "aria-label": "Remember me on this device" %>
+            <%= f.check_box :remember_me, class: "form-check-input", "aria-label": "Remember me on this device", tabindex: 3 %>
             <%= f.label :remember_me, class: "form-check-label" %>
           </div>
 
-          <%= f.submit "Log in", class: "btn custom-login-btn w-100", "aria-label": "Log in to account" %>
+          <%= f.submit "Log in", class: "btn custom-login-btn w-100", "aria-label": "Log in to account", tabindex: 4 %>
         <% end %>
 
         <%= render "devise/shared/links" %>

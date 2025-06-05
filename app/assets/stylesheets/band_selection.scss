@@ -105,3 +105,65 @@
     transform: translateY(0);
   }
 }
+
+/* Keyboard navigation support */
+.search-result-item {
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  border: 2px solid transparent;
+
+  &:hover,
+  &.keyboard-focused {
+    background-color: #f8f9fa;
+    border-color: #007bff;
+  }
+
+  &.keyboard-focused {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  }
+
+  &:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+  }
+}
+
+/* Enhanced accessibility for search dropdown */
+.search-results-dropdown {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+  &:focus-within {
+    border-color: #007bff;
+  }
+}
+
+/* Selected bands list accessibility */
+.selected-bands-container {
+  .band-item {
+    position: relative;
+
+    .remove-band-btn {
+      &:focus {
+        outline: 2px solid #dc3545;
+        outline-offset: 2px;
+        z-index: 1;
+      }
+    }
+  }
+}
+
+/* Improve focus visibility for band search input */
+#band-search {
+  &:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+  }
+}

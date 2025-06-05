@@ -13,10 +13,11 @@
         <input type="text" id="band-search" class="form-control border-start-0 ps-0" 
                placeholder="Search for bands" aria-label="Search bands" 
                data-band-selection-target="search"
-               data-action="input->band-selection#search focus->band-selection#searchFocus">
+               data-action="input->band-selection#search focus->band-selection#searchFocus"
+               tabindex="5">
       </div>
       
-      <div id="band-search-results" class="position-relative" data-band-selection-target="results">
+      <div id="band-search-results" class="position-relative" data-band-selection-target="results" role="listbox" aria-label="Band search results">
         <!-- Search results will appear here -->
       </div>
     </div>
@@ -24,9 +25,9 @@
     <div id="selected-bands" class="mb-3">
       <div class="d-flex justify-content-between align-items-center mb-2">
         <label class="form-label mb-0 fw-bold">Selected Artists:</label>
-        <span id="selected-count" class="badge bg-primary rounded-pill" data-band-selection-target="count">0</span>
+        <span id="selected-count" class="badge bg-primary rounded-pill" data-band-selection-target="count" aria-live="polite">0</span>
       </div>
-      <div id="selected-bands-list" class="selected-bands-container" data-band-selection-target="list">
+      <div id="selected-bands-list" class="selected-bands-container" data-band-selection-target="list" role="list" aria-label="Selected bands">
         <!-- No bands selected message -->
         <div id="no-bands-message" class="text-muted text-center p-3" data-band-selection-target="noMessage">
           No bands selected. Search and add bands above.
@@ -42,7 +43,7 @@
     
     <!-- Loading spinner -->
     <div data-band-selection-target="loading" style="display: none" class="spinner-container">
-      <div class="spinner-border text-primary" role="status">
+      <div class="spinner-border text-primary" role="status" aria-live="polite">
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>

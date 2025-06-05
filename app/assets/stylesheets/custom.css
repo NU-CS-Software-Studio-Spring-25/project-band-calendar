@@ -233,3 +233,16 @@ h2 {
   margin-left: 47%;
   color: white;
 }
+
+.submit-event-btn {
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.submit-event-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}

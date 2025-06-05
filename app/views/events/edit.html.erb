@@ -11,17 +11,17 @@
   } do |f| %>
     <div class="form-group mb-3">
       <%= f.label :name, "Event Name" %>
-      <%= f.text_field :name, class: "form-control", placeholder: "Enter event name", required: true, id: "event_name", "aria-label": "Event name" %>
+      <%= f.text_field :name, class: "form-control", placeholder: "Enter event name", required: true, id: "event_name", "aria-label": "Event name", tabindex: 1 %>
     </div>
     
     <div class="form-group mb-3">
       <%= f.label :venue_id, "Venue" %>
-      <%= f.collection_select :venue_id, @venues, :id, :name, { prompt: "Select venue" }, { class: "form-select", required: true, id: "event_venue_id", "aria-label": "Select venue for event" } %>
+      <%= f.collection_select :venue_id, @venues, :id, :name, { prompt: "Select venue" }, { class: "form-select", required: true, id: "event_venue_id", "aria-label": "Select venue for event", tabindex: 2 } %>
     </div>
     
     <div class="form-group mb-3">
       <%= f.label :date, "Date & Time" %>
-      <%= f.date_field :date, class: "form-control datetimepicker", placeholder: "Select date and time", required: true, id: "event_date", min: Date.current.strftime("%Y-%m-%d"), "aria-label": "Event date and time" %>
+      <%= f.date_field :date, class: "form-control datetimepicker", placeholder: "Select date and time", required: true, id: "event_date", min: Date.current.strftime("%Y-%m-%d"), "aria-label": "Event date and time", tabindex: 3 %>
     </div>
     
     <div class="form-group mb-4">
@@ -33,7 +33,7 @@
     <%= render 'events/band_times_fields' %>
     
     <div class="mt-4">
-      <%= f.submit "Update", class: "btn btn-primary", "aria-label": "Update event #{@event.name}" %>
-      <%= link_to "Cancel", event_path(@event), class: "btn btn-secondary ms-2", "aria-label": "Cancel event editing and return to #{@event.name} details" %>
+      <%= f.submit "Update", class: "btn btn-primary", "aria-label": "Update event #{@event.name}", tabindex: 5 %>
+      <%= link_to "Cancel", event_path(@event), class: "btn btn-secondary ms-2", "aria-label": "Cancel event editing and return to #{@event.name} details", tabindex: 6 %>
     </div>
   <% end %>

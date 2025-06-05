@@ -11,22 +11,22 @@
   } do |f| %>
     <div class="form-group mb-3">
       <%= f.label :name, "Band Name", class: "text-white" %> 
-      <%= f.text_field :name, class: "form-control", placeholder: "Enter band name", required: true, id: "band_name", "aria-label": "Band name" %>
+      <%= f.text_field :name, class: "form-control", placeholder: "Enter band name", required: true, id: "band_name", "aria-label": "Band name", tabindex: 1 %>
     </div>
 
     <div class="form-group mb-3">
       <%= f.label :photo_url, "Photo URL", class: "text-white" %> 
-      <%= f.url_field :photo_url, class: "form-control", placeholder: "Enter photo URL (optional)", id: "band_photo_url", "aria-label": "Band photo URL" %>
+      <%= f.url_field :photo_url, class: "form-control", placeholder: "Enter photo URL (optional)", id: "band_photo_url", "aria-label": "Band photo URL", tabindex: 2 %>
     </div>
 
     <div class="form-group mb-3">
       <%= f.label :bio, "Biography", class: "text-white" %> 
-      <%= f.text_area :bio, class: "form-control", rows: 4, placeholder: "Enter band biography", maxlength: "1000", id: "band_bio", "aria-label": "Band biography" %>
+      <%= f.text_area :bio, class: "form-control", rows: 4, placeholder: "Enter band biography", maxlength: "1000", id: "band_bio", "aria-label": "Band biography", tabindex: 3 %>
     </div>
 
     <div class="mt-4">
-      <%= f.submit "Create", class: "btn nav-button", "aria-label": "Create new band" %>
-      <%= link_to "Cancel", bands_path, class: "btn cancel-button ms-2", "aria-label": "Cancel band creation and return to bands list" %>
+      <%= f.submit "Create", class: "btn nav-button", "aria-label": "Create new band", tabindex: 4 %>
+      <%= link_to "Cancel", bands_path, class: "btn cancel-button ms-2", "aria-label": "Cancel band creation and return to bands list", tabindex: 5 %>
     </div>
   <% end %>
 </div>

@@ -11,20 +11,20 @@
   } do |f| %>
     <div class="form-group mb-3">
       <%= f.label :name, "Event Name", class: "text-white"%>
-      <%= f.text_field :name, class: "form-control", placeholder: "Enter event name", required: true, id: "event_name", "aria-label": "Event name" %>
+      <%= f.text_field :name, class: "form-control", placeholder: "Enter event name", required: true, id: "event_name", "aria-label": "Event name", tabindex: 1 %>
     </div>
     
     <div class="form-group mb-3">
       <%= f.label :venue_id, "Venue", class: "text-white"%>
       <div class="d-flex">
-        <%= f.collection_select :venue_id, @venues, :id, :display_name, { prompt: "Select venue" }, { class: "form-select me-2", required: true, id: "event_venue_id", "aria-label": "Select venue for event" } %>
-        <%= link_to "Add New Venue", new_venue_path, class: "btn btn-outline-primary", "aria-label": "Create new venue" %>
+        <%= f.collection_select :venue_id, @venues, :id, :display_name, { prompt: "Select venue" }, { class: "form-select me-2", required: true, id: "event_venue_id", "aria-label": "Select venue for event", tabindex: 2 } %>
+        <%= link_to "Add New Venue", new_venue_path, class: "btn btn-outline-primary", "aria-label": "Create new venue", tabindex: 3 %>
       </div>
     </div>
     
     <div class="form-group mb-3">
       <%= f.label :date, "Date & Time", class: "text-white"%>
-      <%= f.date_field :date, class: "form-control datetimepicker", placeholder: "Select date and time", required: true, id: "event_date", min: Date.current.strftime("%Y-%m-%d"), "aria-label": "Event date and time" %>
+      <%= f.date_field :date, class: "form-control datetimepicker", placeholder: "Select date and time", required: true, id: "event_date", min: Date.current.strftime("%Y-%m-%d"), "aria-label": "Event date and time", tabindex: 4 %>
     </div>
     
     <div class="form-group mb-4">
@@ -35,8 +35,8 @@
     <%= render 'events/band_times_fields' %>
     
     <div class="mt-4">
-      <%= f.submit "Create", class: "btn btn-primary px-4", "aria-label": "Create new event" %>
-      <%= link_to "Cancel", events_path, class: "btn btn-secondary ms-2", "aria-label": "Cancel event creation and return to events list" %>
+      <%= f.submit "Create", class: "btn btn-primary px-4", "aria-label": "Create new event", tabindex: 6 %>
+      <%= link_to "Cancel", events_path, class: "btn btn-secondary ms-2", "aria-label": "Cancel event creation and return to events list", tabindex: 7 %>
     </div>
   <% end %>
 </div>

@@ -14,3 +14,83 @@
  *= require_self
  *= require custom
  */
+
+/* Keyboard Navigation and Accessibility Styles */
+
+/* Enhanced focus indicators for all focusable elements */
+*:focus {
+  outline: 2px solid #007bff !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25) !important;
+}
+
+/* Remove browser default outline since we have custom one */
+*:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Enhanced focus for form controls */
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+  border-color: #80bdff !important;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+}
+
+/* Enhanced focus for buttons */
+.btn:focus,
+.btn:focus-visible {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5) !important;
+}
+
+/* Focus for links */
+a:focus,
+a:focus-visible {
+  outline: 2px solid #007bff !important;
+  outline-offset: 2px !important;
+  text-decoration: underline !important;
+}
+
+/* Skip to main content link for screen readers */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #007bff;
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 9999;
+  border-radius: 4px;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* Enhanced visibility for required fields */
+.form-label::after {
+  content: "";
+}
+
+[required] + .form-label::after,
+.form-label[for] input[required] ~ &::after {
+  content: " *";
+  color: #dc3545;
+}
+
+/* Improve visibility of form validation */
+.is-invalid {
+  border-color: #dc3545 !important;
+}
+
+.invalid-feedback {
+  display: block !important;
+}
+
+/* Ensure consistent tab order visual feedback */
+[tabindex]:focus {
+  position: relative;
+  z-index: 1;
+}
