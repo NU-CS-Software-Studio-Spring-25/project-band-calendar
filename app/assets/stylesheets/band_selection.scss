@@ -111,6 +111,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease, border-color 0.2s ease;
   border: 2px solid transparent;
+  padding: 8px 12px;
 
   &:hover,
   &.keyboard-focused {
@@ -125,7 +126,41 @@
 
   &:focus {
     outline: 2px solid #007bff;
-    outline-offset: 2px;
+    outline-offset: -2px;
+    background-color: #e7f3ff;
+    border-color: #007bff;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #007bff;
+    outline-offset: -2px;
+  }
+}
+
+/* Ensure band search result items are properly styled */
+.band-search-result-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #f8f9fa;
+  }
+
+  .band-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    margin-right: 12px;
+    object-fit: cover;
+  }
+
+  .band-info {
+    flex-grow: 1;
+    font-weight: 500;
   }
 }
 
