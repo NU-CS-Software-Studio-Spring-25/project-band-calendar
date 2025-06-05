@@ -131,7 +131,7 @@
       </div>
       
       <div class="mt-4 btn-group">
-        <%= link_to "Back to all events", events_path, class: "btn btn-secondary", "aria-label": "Return to events list" %>
+        <%= link_to "Back to all events", events_path, class: "btn btn-outline-light", "aria-label": "Return to events list" %>
         <% if current_user_admin? || (@event.submitted_by == current_user) %>
           <%= link_to "Edit Event", edit_event_path(@event), class: "btn btn-primary ms-2", "aria-label": "Edit event #{@event.name}" %>
           <%= button_to "Delete Event", event_path(@event), method: :delete, 

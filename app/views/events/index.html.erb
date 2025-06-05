@@ -23,7 +23,7 @@
         <%= link_to "Show Pending Events", events_path(pending: true), class: "btn btn-outline-warning me-2", "aria-label": "View pending events awaiting approval" %>
       <% end %>
     <% end %>
-    <%= link_to "View as Calendar", calendar_events_path, class: "btn btn-outline-primary", data: { turbo: false }, "aria-label": "View events in calendar format" %>
+    <%= link_to "View as Calendar", calendar_events_path, class: "btn btn-outline-light", data: { turbo: false }, "aria-label": "View events in calendar format" %>
   </div>
 </div>
 
@@ -92,6 +92,6 @@
   </div>
 
   <div class="text-center">
-    <%= link_to "Add New Event", new_event_path, class: "btn nav-button", "aria-label": "Create new event" %>
+    <%= link_to "Add New Event", new_event_path, class: "btn btn-outline-light", "aria-label": "Create new event" %>
   </div>
 </div>

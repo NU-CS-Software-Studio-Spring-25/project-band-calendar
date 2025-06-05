@@ -18,7 +18,7 @@
       <%= f.label :venue_id, "Venue", class: "text-white"%>
       <div class="d-flex">
         <%= f.collection_select :venue_id, @venues, :id, :display_name, { prompt: "Select venue" }, { class: "form-select me-2", required: true, id: "event_venue_id", "aria-label": "Select venue for event", tabindex: 2 } %>
-        <%= link_to "Add New Venue", new_venue_path, class: "btn btn-outline-primary", "aria-label": "Create new venue", tabindex: 3 %>
+        <%= link_to "Add New Venue", new_venue_path, class: "btn btn-outline-light", "aria-label": "Create new venue", tabindex: 3 %>
       </div>
     </div>
     
