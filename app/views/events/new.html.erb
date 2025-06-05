@@ -18,7 +18,7 @@
       <%= f.label :venue_id, "Venue", class: "text-white"%>
       <div class="d-flex">
         <%= f.collection_select :venue_id, @venues, :id, :display_name, { prompt: "Select venue" }, { class: "form-select me-2", required: true, id: "event_venue_id" } %>
-        <%= link_to "Add New Venue", new_venue_path, class: "btn btn-outline-primary" %>
+        <%= link_to "Add New Venue", new_venue_path, class: "btn btn-outline-primary", "aria-label": "Create new venue" %>
       </div>
     </div>
     
@@ -35,8 +35,8 @@
     <%= render 'events/band_times_fields' %>
     
     <div class="mt-4">
-      <%= f.submit "Create", class: "btn btn-primary px-4" %>
-      <%= link_to "Cancel", events_path, class: "btn btn-secondary ms-2" %>
+      <%= f.submit "Create", class: "btn btn-primary px-4", "aria-label": "Create new event" %>
+      <%= link_to "Cancel", events_path, class: "btn btn-secondary ms-2", "aria-label": "Cancel event creation and return to events list" %>
     </div>
   <% end %>
 </div>

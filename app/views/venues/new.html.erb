@@ -106,8 +106,8 @@
     </div>
 
     <div class="mt-4">
-      <%= f.submit "Create", class: "btn btn-primary px-4" %>
-      <%= link_to "Cancel", venues_path, class: "btn btn-secondary ms-2" %>
+      <%= f.submit "Create", class: "btn btn-primary px-4", "aria-label": "Create new venue" %>
+      <%= link_to "Cancel", venues_path, class: "btn btn-secondary ms-2", "aria-label": "Cancel venue creation and return to venues list" %>
     </div>
   <% end %>
 </div>

@@ -20,7 +20,7 @@
             <%= f.password_field :password_confirmation, class: "form-control" %>
           </div>
 
-          <%= f.submit "Sign up", class: "btn custom-login-btn w-100" %>
+          <%= f.submit "Sign up", class: "btn custom-login-btn w-100", "aria-label": "Create new account" %>
         <% end %>
 
         <%= render "devise/shared/links" %>

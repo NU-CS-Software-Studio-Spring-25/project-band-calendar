@@ -10,7 +10,7 @@
     <%= form_with url: events_path, method: :get, local: true, class: "w-100 d-flex align-items-center" do |form| %>
       <%= form.label :month, "Filter by Month:", class: "me-2 mb-0 fw-bold text-dark" %>
       <%= form.month_field :month, value: params[:month], class: "form-control me-2" %>
-      <%= form.submit "Apply", class: "btn btn-primary" %>
+      <%= form.submit "Apply", class: "btn btn-primary", "aria-label": "Apply month filter to events" %>
     <% end %>
   </div>
 
@@ -18,12 +18,12 @@
   <div>
     <% if current_user_admin? %>
       <% if params[:pending] %>
-        <%= link_to "Show Approved Events", events_path, class: "btn btn-outline-success me-2" %>
+        <%= link_to "Show Approved Events", events_path, class: "btn btn-outline-success me-2", "aria-label": "View approved events" %>
       <% else %>
-        <%= link_to "Show Pending Events", events_path(pending: true), class: "btn btn-outline-warning me-2" %>
+        <%= link_to "Show Pending Events", events_path(pending: true), class: "btn btn-outline-warning me-2", "aria-label": "View pending events awaiting approval" %>
       <% end %>
     <% end %>
-    <%= link_to "View as Calendar", calendar_events_path, class: "btn btn-outline-primary", data: { turbo: false } %>
+    <%= link_to "View as Calendar", calendar_events_path, class: "btn btn-outline-primary", data: { turbo: false }, "aria-label": "View events in calendar format" %>
   </div>
 </div>
 
@@ -76,11 +76,11 @@
         
         <% if current_user_admin? && event.pending? %>
           <div class="mt-3">
-            <%= button_to "Approve", approve_event_path(event), method: :patch, class: "btn btn-success btn-sm" %>
+            <%= button_to "Approve", approve_event_path(event), method: :patch, class: "btn btn-success btn-sm", "aria-label": "Approve event #{event.name}" %>
           </div>
         <% elsif current_user_admin? && event.approved? %>
           <div class="mt-3">
-            <%= button_to "Unapprove", disapprove_event_path(event), method: :patch, class: "btn btn-warning btn-sm" %>
+            <%= button_to "Unapprove", disapprove_event_path(event), method: :patch, class: "btn btn-warning btn-sm", "aria-label": "Mark event #{event.name} as pending approval" %>
           </div>
         <% end %>
       </div>
@@ -92,6 +92,6 @@
   </div>
 
   <div class="text-center">
-    <%= link_to "Add New Event", new_event_path, class: "btn nav-button" %>
+    <%= link_to "Add New Event", new_event_path, class: "btn nav-button", "aria-label": "Create new event" %>
   </div>
 </div>

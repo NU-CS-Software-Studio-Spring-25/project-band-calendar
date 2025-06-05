@@ -33,7 +33,7 @@
     <%= render 'events/band_times_fields' %>
     
     <div class="mt-4">
-      <%= f.submit "Update", class: "btn btn-primary" %>
-      <%= link_to "Cancel", event_path(@event), class: "btn btn-secondary ms-2" %>
+      <%= f.submit "Update", class: "btn btn-primary", "aria-label": "Update event #{@event.name}" %>
+      <%= link_to "Cancel", event_path(@event), class: "btn btn-secondary ms-2", "aria-label": "Cancel event editing and return to #{@event.name} details" %>
     </div>
   <% end %>

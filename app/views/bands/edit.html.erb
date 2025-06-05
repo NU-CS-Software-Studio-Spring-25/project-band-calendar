@@ -25,8 +25,8 @@
     </div>
     
     <div class="mt-4">
-      <%= f.submit "Update", class: "btn btn-primary" %>
-      <%= link_to "Cancel", band_path(@band), class: "btn btn-secondary ms-2" %>
+      <%= f.submit "Update", class: "btn btn-primary", "aria-label": "Update band #{@band.name}" %>
+      <%= link_to "Cancel", band_path(@band), class: "btn btn-secondary ms-2", "aria-label": "Cancel band editing and return to #{@band.name} details" %>
     </div>
   <% end %>
 </div> 
