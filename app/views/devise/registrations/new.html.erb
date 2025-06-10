@@ -7,20 +7,20 @@
         <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
           <div class="mb-3">
             <%= f.label :email, class: "form-label text-white" %>
-            <%= f.email_field :email, autofocus: true, class: "form-control" %>
+            <%= f.email_field :email, autofocus: true, class: "form-control", "aria-label": "Email address", tabindex: 1 %>
           </div>
 
           <div class="mb-3">
             <%= f.label :password, class: "form-label text-white" %>
-            <%= f.password_field :password, autocomplete: "new-password", class: "form-control" %>
+            <%= f.password_field :password, autocomplete: "new-password", class: "form-control", "aria-label": "Password", tabindex: 2 %>
           </div>
 
           <div class="mb-3">
             <%= f.label :password_confirmation, class: "form-label text-white" %>
-            <%= f.password_field :password_confirmation, class: "form-control" %>
+            <%= f.password_field :password_confirmation, class: "form-control", "aria-label": "Confirm password", tabindex: 3 %>
           </div>
 
-          <%= f.submit "Sign up", class: "btn btn-outline-light w-100" %>
+          <%= f.submit "Sign up", class: "btn btn-outline-light w-100", "aria-label": "Create new account", tabindex: 4 %>
         <% end %>
 
         <%= render "devise/shared/links" %>

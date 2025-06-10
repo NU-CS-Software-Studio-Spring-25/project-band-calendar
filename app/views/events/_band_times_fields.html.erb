@@ -1,4 +1,4 @@
-<div class="card mt-4" id="band-times-container" data-controller="band-times">
+<div class="card mt-4" id="band-times-container" data-controller="band-times" role="region" aria-label="Band performance times">
   <div class="card-header bg-light">
     <h3 class="h5 mb-0">Band Performance Times</h3>
   </div>
@@ -8,9 +8,9 @@
     <div id="band-times-fields">
       <% if @event.persisted? && @event.band_events.any? %>
         <% @event.band_events.includes(:band).order(:set_position).each do |band_event| %>
-          <div class="band-time-entry card mb-3">
+          <div class="band-time-entry card mb-3" role="group" aria-labelledby="band-<%= band_event.band_id %>-heading">
             <div class="card-header bg-light">
-              <h4 class="h6 mb-0">
+              <h4 class="h6 mb-0" id="band-<%= band_event.band_id %>-heading">
                 <img src="<%= band_event.band.photo_url || 'https://via.placeholder.com/30' %>" 
                      class="band-img me-2" alt="<%= band_event.band.name %>" width="30" height="30">
                 <%= band_event.band.name %>
@@ -19,25 +19,25 @@
             <div class="card-body">
               <div class="row">
                 <div class="col-md-3 mb-3">
-                  <label class="form-label">Set Position</label>
-                  <input type="number" name="band_times[<%= band_event.band_id %>][set_position]" 
+                  <label for="position-<%= band_event.band_id %>" class="form-label">Set Position</label>
+                  <input type="number" id="position-<%= band_event.band_id %>" name="band_times[<%= band_event.band_id %>][set_position]" 
                          class="form-control" value="<%= band_event.set_position %>" min="1">
                 </div>
                 <div class="col-md-3 mb-3">
-                  <label class="form-label">Start Time</label>
-                  <input type="time" name="band_times[<%= band_event.band_id %>][start_time]" 
+                  <label for="start-<%= band_event.band_id %>" class="form-label">Start Time</label>
+                  <input type="time" id="start-<%= band_event.band_id %>" name="band_times[<%= band_event.band_id %>][start_time]" 
                          class="form-control" 
                          value="<%= band_event.start_time&.strftime('%H:%M') %>">
                 </div>
                 <div class="col-md-3 mb-3">
-                  <label class="form-label">End Time</label>
-                  <input type="time" name="band_times[<%= band_event.band_id %>][end_time]" 
+                  <label for="end-<%= band_event.band_id %>" class="form-label">End Time</label>
+                  <input type="time" id="end-<%= band_event.band_id %>" name="band_times[<%= band_event.band_id %>][end_time]" 
                          class="form-control"
                          value="<%= band_event.end_time&.strftime('%H:%M') %>">
                 </div>
                 <div class="col-md-12">
-                  <label class="form-label">Notes</label>
-                  <textarea name="band_times[<%= band_event.band_id %>][notes]" 
+                  <label for="notes-<%= band_event.band_id %>" class="form-label">Notes</label>
+                  <textarea id="notes-<%= band_event.band_id %>" name="band_times[<%= band_event.band_id %>][notes]" 
                             class="form-control" rows="2"><%= band_event.notes %></textarea>
                 </div>
               </div>
@@ -45,10 +45,10 @@
           </div>
         <% end %>
       <% else %>
-        <div class="alert alert-info" id="no-bands-selected-alert">
+        <div class="alert alert-info" id="no-bands-selected-alert" role="status">
           <p class="mb-0 text-center">Select bands first to set their performance times.</p>
         </div>
       <% end %>
     </div>
   </div>
-</div> 
+</div>

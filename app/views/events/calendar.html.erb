@@ -1,8 +1,15 @@
-<h1 class="mb-4 text-center">Event Calendar</h1>
+<h1 class="mb-4 text-center" id="calendar-heading">Event Calendar</h1>
 
-<div id="calendar" style="max-width: 900px; margin: auto;"></div>
+<div id="calendar" 
+     style="max-width: 900px; margin: auto;" 
+     role="region" 
+     aria-label="Full event calendar" 
+     aria-describedby="calendar-heading">
+</div>
 
-<%= link_to "← Back to Events List", events_path, class: "btn btn-outline-secondary mt-4 d-block text-center" %>
+<%= link_to "← Back to Events List", events_path, 
+            class: "btn btn-outline-secondary mt-4 d-block text-center", 
+            aria-label: "Back to the list of events" %>
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {

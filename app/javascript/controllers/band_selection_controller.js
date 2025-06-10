@@ -21,8 +21,37 @@ export default class extends Controller {
     this.bandsData = new Map(); // Store band data for event emitting
     this.searchTimeout = null;
     this.searchDropdown = null;
+    this.currentFocusIndex = -1; // For keyboard navigation
     this.updateSelectedCount();
     this.updateNoBandsMessage();
+
+    // Add keyboard event listeners
+    this.searchTarget.addEventListener(
+      "keydown",
+      this.handleSearchKeydown.bind(this)
+    );
+
+    // Handle when focus leaves the search input
+    this.searchTarget.addEventListener("blur", (e) => {
+      // Small delay to check if focus moved to a search result
+      setTimeout(() => {
+        if (
+          !this.searchDropdown ||
+          !this.searchDropdown.contains(document.activeElement)
+        ) {
+          // Focus left the search area, close dropdown after delay
+          // Only close if focus didn't move to a dropdown item
+          setTimeout(() => {
+            if (
+              !this.searchDropdown ||
+              !this.searchDropdown.contains(document.activeElement)
+            ) {
+              this.closeSearchDropdown();
+            }
+          }, 150);
+        }
+      }, 50);
+    });
 
     // Pre-populate bands if they exist
     const prePopulatedBands = JSON.parse(this.element.dataset.bands || "[]");
@@ -34,8 +63,79 @@ export default class extends Controller {
     this.emitBandsChangedEvent();
   }
 
+  disconnect() {
+    // Clean up event listeners
+    this.searchTarget.removeEventListener(
+      "keydown",
+      this.handleSearchKeydown.bind(this)
+    );
+    // Note: blur event listener will be automatically cleaned up when element is removed
+  }
+
+  handleSearchKeydown(event) {
+    if (!this.searchDropdown) return;
+
+    const resultItems = this.searchDropdown.querySelectorAll(
+      ".search-result-item"
+    );
+
+    switch (event.key) {
+      case "ArrowDown":
+        event.preventDefault();
+        this.currentFocusIndex = Math.min(
+          this.currentFocusIndex + 1,
+          resultItems.length - 1
+        );
+        this.updateFocus(resultItems);
+        break;
+      case "ArrowUp":
+        event.preventDefault();
+        this.currentFocusIndex = Math.max(this.currentFocusIndex - 1, -1);
+        this.updateFocus(resultItems);
+        break;
+      case "Enter":
+        event.preventDefault();
+        if (
+          this.currentFocusIndex >= 0 &&
+          resultItems[this.currentFocusIndex]
+        ) {
+          resultItems[this.currentFocusIndex].click();
+        }
+        break;
+      case "Escape":
+        event.preventDefault();
+        this.closeSearchDropdown();
+        this.currentFocusIndex = -1;
+        break;
+      case "Tab":
+        // Let tab work naturally through focusable elements in the dropdown
+        if (resultItems.length > 0) {
+          // If we're tabbing forward and no item is focused yet, focus the first item
+          if (this.currentFocusIndex === -1 && !event.shiftKey) {
+            event.preventDefault();
+            this.currentFocusIndex = 0;
+            this.updateFocus(resultItems);
+            resultItems[0].focus();
+          }
+        }
+        break;
+    }
+  }
+
+  updateFocus(resultItems) {
+    // Remove focus from all items
+    resultItems.forEach((item, index) => {
+      item.classList.remove("keyboard-focused");
+      if (index === this.currentFocusIndex) {
+        item.classList.add("keyboard-focused");
+        item.scrollIntoView({ block: "nearest" });
+      }
+    });
+  }
+
   search() {
     const query = this.searchTarget.value.trim();
+    this.currentFocusIndex = -1; // Reset focus index
 
     // Clear any existing timeout
     if (this.searchTimeout) {
@@ -73,6 +173,8 @@ export default class extends Controller {
 
   searchFocus(event) {
     const query = event.currentTarget.value.trim();
+    this.currentFocusIndex = -1; // Reset focus index
+
     if (query !== "") {
       // Show loading in dropdown
       const dropdown = this.createSearchDropdown();
@@ -98,6 +200,7 @@ export default class extends Controller {
     // Close dropdown immediately when a band is selected
     this.closeSearchDropdown();
     this.searchTarget.value = "";
+    this.currentFocusIndex = -1;
 
     // Create a loading indicator that appears directly in the form area
     if (this.hasLoadingTarget) {
@@ -171,6 +274,7 @@ export default class extends Controller {
     if (this.searchDropdown) {
       this.searchDropdown.remove();
       this.searchDropdown = null;
+      this.currentFocusIndex = -1;
     }
   }
 
@@ -181,6 +285,8 @@ export default class extends Controller {
     // Create new dropdown
     this.searchDropdown = document.createElement("div");
     this.searchDropdown.className = "search-results-dropdown";
+    this.searchDropdown.setAttribute("role", "listbox");
+    this.searchDropdown.setAttribute("aria-label", "Search results");
     this.resultsTarget.appendChild(this.searchDropdown);
 
     // Close dropdown when clicking outside
@@ -215,11 +321,30 @@ export default class extends Controller {
       // Show search results
       const resultsContainer = document.createElement("div");
 
-      results.forEach((band) => {
+      results.forEach((band, index) => {
         const item = document.createElement("div");
-        item.className = "band-search-result-item";
+        item.className = "band-search-result-item search-result-item";
         item.dataset.action = "click->band-selection#selectBand";
         item.dataset.spotifyId = band.spotify_id;
+
+        // Make the item focusable
+        item.setAttribute("tabindex", "0");
+        item.setAttribute("role", "option");
+        item.setAttribute("aria-label", `Select band ${band.name}`);
+
+        // Add keyboard event listeners for individual items
+        item.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            item.click();
+          }
+        });
+
+        // Add focus and blur event listeners
+        item.addEventListener("focus", () => {
+          this.currentFocusIndex = index;
+          this.updateFocus(dropdown.querySelectorAll(".search-result-item"));
+        });
 
         // Band image
         const img = document.createElement("img");
@@ -245,10 +370,31 @@ export default class extends Controller {
 
     // Always add "Create New" as the last option - make it sticky
     const createNewItem = document.createElement("div");
-    createNewItem.className = "band-search-result-item create-new";
+    createNewItem.className =
+      "band-search-result-item search-result-item create-new";
     createNewItem.innerHTML =
       '<i class="fas fa-plus-circle me-2"></i> None found? Create New';
     createNewItem.dataset.action = "click->band-selection#createNewBand";
+
+    // Make the create new item focusable
+    createNewItem.setAttribute("tabindex", "0");
+    createNewItem.setAttribute("role", "option");
+    createNewItem.setAttribute("aria-label", "Create new band");
+
+    // Add keyboard event listeners for create new item
+    createNewItem.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        createNewItem.click();
+      }
+    });
+
+    // Add focus event listener for create new item
+    createNewItem.addEventListener("focus", () => {
+      this.currentFocusIndex = results.length; // Position after all results
+      this.updateFocus(dropdown.querySelectorAll(".search-result-item"));
+    });
+
     dropdown.appendChild(createNewItem);
   }
 
