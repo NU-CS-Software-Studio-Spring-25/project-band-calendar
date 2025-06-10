@@ -1,11 +1,15 @@
 <div class="d-flex justify-content-between align-items-center my-4">
   <h1 class="m-0 text-white">
+    <%= link_to "javascript:history.back()", class: "btn btn-link text-white fs-3 fw-bold text-decoration-none me-3 p-0" do %>
+      &lt;
+    <% end %>
     <% if params[:pending] && current_user_admin? %>
       Pending Events
     <% else %>
       All Events
     <% end %>
   </h1>
+
   <div class="d-flex justify-content-start align-items-center mb-4 p-3 bg-light rounded shadow-sm" style="max-width: 400px;">
     <%= form_with url: events_path, method: :get, local: true, class: "w-100 d-flex align-items-center" do |form| %>
       <%= form.label :month, "Filter by Month:", class: "me-2 mb-0 fw-bold text-dark" %>
@@ -13,7 +17,6 @@
       <%= form.submit "Apply", class: "btn btn-primary" %>
     <% end %>
   </div>
-
 
   <div>
     <% if current_user_admin? %>
@@ -26,6 +29,32 @@
     <%= link_to "View as Calendar", calendar_events_path, class: "btn btn-outline-light", data: { turbo: false } %>
   </div>
 </div>
+
+<div class="mb-4">
+  <button id="find-nearby-btn" class="btn btn-outline-light">Find Events Near Me</button>
+</div>
+
+<script>
+  document.getElementById("find-nearby-btn").addEventListener("click", function(e) {
+    e.preventDefault();
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        const radius = 10; // miles — adjust as needed
+        const url = new URL(window.location.href);
+        url.searchParams.set("lat", lat);
+        url.searchParams.set("lon", lon);
+        url.searchParams.set("radius", radius);
+        window.location.href = url.toString();
+      }, function() {
+        alert("Location access denied.");
+      });
+    } else {
+      alert("Geolocation not supported by this browser.");
+    }
+  });
+</script>
 
 <div class="container">
   <% if @events.empty? %>
@@ -88,7 +117,7 @@
   <% end %>
 
   <div class="text-center mt-4">
-  <%= paginate @events %>
+    <%= paginate @events %>
   </div>
 
   <div class="text-center">

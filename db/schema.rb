@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_27_140005) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_10_195643) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -81,6 +81,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_27_140005) do
     t.boolean "all_ages", default: false
     t.boolean "has_food", default: false
     t.boolean "has_bar", default: false
+    t.float "latitude"
+    t.float "longitude"
     t.index ["name"], name: "index_venues_on_name", unique: true
   end
 

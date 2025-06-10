@@ -1,7 +1,9 @@
 <div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="text-white">Venues</h1>
-    <%= link_to "Add New Venue", new_venue_path, class: "btn btn-primary" %>
+    <div class="position-relative my-4 text-center">
+    <%= link_to "javascript:history.back()", class: "position-absolute start-0 top-50 translate-middle-y btn btn-link text-white fs-3 fw-bold text-decoration-none p-0" do %>
+      &lt;
+    <% end %>
+    <h1 class="text-white m-0">Venues</h1>
   </div>
   
   <%= render 'shared/flash_messages' %>

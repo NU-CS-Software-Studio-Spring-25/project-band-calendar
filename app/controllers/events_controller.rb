@@ -15,6 +15,15 @@ def index
     rescue ArgumentError
       flash.now[:alert] = "Invalid month format."
     end
+  #location
+    if params[:lat].present? && params[:lon].present?
+      radius = params[:radius] || 10
+      @events = Event.joins(:venue).merge(
+        Venue.near([params[:lat], params[:lon]], radius)
+      )
+    else
+      @events = Event.all
+    end
   end
 
   # Finally, apply pagination to the filtered scope

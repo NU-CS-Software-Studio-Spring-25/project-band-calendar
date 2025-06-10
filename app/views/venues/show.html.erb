@@ -2,19 +2,20 @@
   <%= render 'shared/flash_messages' %>
   
   <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
+    <ol class="breadcrumb text-white">
       <li class="breadcrumb-item"><%= link_to "Venues", venues_path %></li>
-      <li class="breadcrumb-item active" aria-current="page"><%= @venue.name %></li>
+      <li class="breadcrumb-item active text-white" aria-current="page"><%= @venue.name %></li>
     </ol>
   </nav>
+
   
   <div class="row">
     <div class="col-lg-8">
-      <h1 class="mb-2"><%= @venue.name %></h1>
+      <h1 class="mb-2 text-white"><%= @venue.name %></h1>
       <h5 class="text-muted mb-4"><%= @venue.venue_type %></h5>
       
       <div class="mb-4">
-        <h5>About This Venue</h5>
+        <h5 class="text-white">About This Venue</h5>
         <div class="card">
           <div class="card-body">
             <% if @venue.description.present? %>
@@ -27,7 +28,7 @@
       </div>
       
       <div class="mb-4">
-        <h5>Upcoming Events</h5>
+        <h5 class="text-white">Upcoming Events</h5>
         <% if @upcoming_events.any? %>
           <div class="list-group">
             <% @upcoming_events.each do |event| %>
@@ -55,7 +56,7 @@
       
       <% if @past_events.any? %>
         <div class="mb-4">
-          <h5>Past Events</h5>
+          <h5 class="text-white">Past Events</h5>
           <div class="list-group">
             <% @past_events.limit(5).each do |event| %>
               <%= link_to event_path(event), class: "list-group-item list-group-item-action" do %>
