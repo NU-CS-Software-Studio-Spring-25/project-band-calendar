@@ -92,7 +92,7 @@ band_name_suffixes = ['Wolves', 'Dragons', 'Band', 'Orchestra', 'Crew', 'Collect
   Band.create!(
     name: band_name,
     # In a real app, these would likely come from Spotify:
-    photo_url: "https://placekitten.com/300/300?image=#{rand(1..16)}",
+    photo_url: "https://picsum.photos/300/300?random=#{rand(1..1000)}",
     bio: "#{Faker::Music.genre} band from #{Faker::Address.city}.\n\n#{Faker::Lorem.paragraph(sentence_count: 3)}"
   )
 end
