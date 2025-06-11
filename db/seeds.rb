@@ -13,6 +13,7 @@ require 'set'
 
 # Clear existing data
 puts "Clearing existing data..."
+AdminNotification.destroy_all
 BandEvent.destroy_all
 Band.destroy_all
 Event.destroy_all
@@ -91,8 +92,8 @@ band_name_suffixes = ['Wolves', 'Dragons', 'Band', 'Orchestra', 'Crew', 'Collect
   
   Band.create!(
     name: band_name,
-    # In a real app, these would likely come from Spotify:
-    photo_url: "https://picsum.photos/300/300?random=#{rand(1..1000)}",
+    # Using Faker avatar images for realistic band photos
+    photo_url: Faker::Avatar.image,
     bio: "#{Faker::Music.genre} band from #{Faker::Address.city}.\n\n#{Faker::Lorem.paragraph(sentence_count: 3)}"
   )
 end
