@@ -29,6 +29,9 @@ Rails.application.routes.draw do
   resources :venues
   resources :band_events, only: [:create, :update, :destroy]
   
+  # Admin routes
+  resources :admin_notifications, except: [:edit, :update]
+  
   # Spotify API routes
   get 'spotify/search_artists', to: 'spotify#search_artists'
   get 'spotify/get_artist_info', to: 'spotify#get_artist_info'
