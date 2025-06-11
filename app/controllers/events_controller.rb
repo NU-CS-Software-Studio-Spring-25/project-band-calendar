@@ -41,10 +41,12 @@ class EventsController < ApplicationController
       radius = (params[:radius] || 10).to_f
       lat = params[:lat].to_f
       lon = params[:lon].to_f
-      @events = Event.includes(:venue).where(venues: { id: Venue.near([lat, lon], radius).pluck(:id) })
+      nearby_venue_ids = Venue.near([lat, lon], radius, order: false).pluck(:id)
+      @events = Event.includes(:venue).where(venues: { id: nearby_venue_ids })
     else
       @events = Event.all
     end
+    
 
     @events = scope.page(params[:page]).per(3)
 

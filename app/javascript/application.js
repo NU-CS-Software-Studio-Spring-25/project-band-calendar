@@ -1,8 +1,11 @@
-// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
-import "@hotwired/turbo-rails";
-import "controllers";
-import "controllers"
+import "@hotwired/turbo-rails"
+import { Application } from "@hotwired/stimulus"
 
+import "controllers" // pulls in your geo_controller if importmap is pinned
+
+const application = Application.start()
+application.debug = true
+window.Stimulus = application
 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {

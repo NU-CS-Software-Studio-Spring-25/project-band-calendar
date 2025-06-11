@@ -31,30 +31,9 @@
 </div>
 
 <div class="mb-4">
-  <button id="find-nearby-btn" class="btn btn-outline-light">Find Events Near Me</button>
+  <button id="find-nearby-btn" class="btn btn-outline-light" data-controller="geo" data-action="click->geo#findLocation">Find Events Near Me</button>
 </div>
 
-<script>
-  document.getElementById("find-nearby-btn").addEventListener("click", function(e) {
-    e.preventDefault();
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-        const radius = 10; // miles — adjust as needed
-        const url = new URL(window.location.href);
-        url.searchParams.set("lat", lat);
-        url.searchParams.set("lon", lon);
-        url.searchParams.set("radius", radius);
-        window.location.href = url.toString();
-      }, function() {
-        alert("Location access denied.");
-      });
-    } else {
-      alert("Geolocation not supported by this browser.");
-    }
-  });
-</script>
 
 <div class="container">
   <% if @events.empty? %>
