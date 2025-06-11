@@ -67,6 +67,8 @@ end
 
 gem "devise", "~> 4.9"
 gem "faker"
+gem "premailer-rails"  # For inline CSS in emails
+gem "nokogiri"         # Required by premailer-rails
 
 gem "dotenv", groups: [ :development, :test ]
 gem "rspotify"
