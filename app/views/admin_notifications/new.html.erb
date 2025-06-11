@@ -1,0 +1,409 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-light">
+          <i class="bi bi-plus-circle"></i> Send New Notification
+        </h1>
+        <%= link_to "Back to Notifications", admin_notifications_path, 
+            class: "btn btn-outline-light" %>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="card">
+            <div class="card-body">
+              <%= form_with model: @notification, local: true, data: { turbo: false }, html: { class: "needs-validation", novalidate: true } do |form| %>
+                
+                <% if @notification.errors.any? %>
+                  <div class="alert alert-danger">
+                    <h5>Please fix the following errors:</h5>
+                    <ul class="mb-0">
+                      <% @notification.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
+
+                <div class="mb-4">
+                  <%= form.label :subject, class: "form-label fw-medium" %>
+                  <%= form.text_field :subject, 
+                      class: "form-control #{'is-invalid' if @notification.errors[:subject].any?}",
+                      placeholder: "e.g., 🎵 Exciting Events This Week!",
+                      required: true %>
+                  <div class="invalid-feedback">
+                    Please provide a subject for your notification.
+                  </div>
+                </div>
+
+                <div class="mb-4">
+                  <%= form.label :content, "Message Content", class: "form-label fw-medium" %>
+                  <%= form.text_area :content, 
+                      class: "form-control #{'is-invalid' if @notification.errors[:content].any?}",
+                      rows: 6,
+                      placeholder: "Write your message here... You can include details about upcoming events, announcements, or any other information you'd like to share with users.",
+                      required: true %>
+                  <div class="form-text">
+                    You can use line breaks and basic formatting. Keep it engaging and informative!
+                  </div>
+                  <div class="invalid-feedback">
+                    Please provide content for your notification.
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-4">
+                      <label class="form-label fw-medium">
+                        <i class="bi bi-calendar-event"></i> Attach Events (Optional)
+                      </label>
+                      <div class="form-text mb-3">
+                        Select events to feature in your notification. These will be beautifully displayed with images and details.
+                      </div>
+                      
+                      <% if @events.any? %>
+                        <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
+                          <% @events.each do |event| %>
+                            <div class="form-check mb-2">
+                              <%= check_box_tag "admin_notification[event_ids][]", event.id, 
+                                  false, 
+                                  { 
+                                    class: "form-check-input", 
+                                    id: "event_#{event.id}",
+                                    data: { 
+                                      event_name: event.name,
+                                      event_date: event.date.strftime("%A, %B %d, %Y at %I:%M %p"),
+                                      venue_name: event.venue.name,
+                                      venue_address: "#{event.venue.street_address}, #{event.venue.city}, #{event.venue.state}",
+                                      bands: event.bands.map { |b| { name: b.name, photo: b.photo_url.present? ? b.photo_url : Faker::Avatar.image } }.to_json
+                                    }
+                                  } %>
+                              <%= label_tag "event_#{event.id}", class: "form-check-label" do %>
+                                <div class="fw-medium"><%= event.name %></div>
+                                <div class="text-muted small">
+                                  <%= event.date.strftime("%b %d, %Y") %> at <%= event.venue.name %>
+                                </div>
+                              <% end %>
+                            </div>
+                          <% end %>
+                        </div>
+                      <% else %>
+                        <div class="alert alert-info">
+                          <i class="bi bi-info-circle"></i>
+                          No approved events available to attach.
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="mb-4">
+                      <label class="form-label fw-medium">
+                        <i class="bi bi-people"></i> Select Recipients
+                      </label>
+                      <div class="form-text mb-3">
+                        Choose who should receive this notification. Leave empty to send to all users.
+                      </div>
+                      
+                      <div class="mb-3">
+                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="selectAllUsers()">
+                          Select All
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="deselectAllUsers()">
+                          Deselect All
+                        </button>
+                      </div>
+                      
+                      <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
+                        <% @users.each do |user| %>
+                          <div class="form-check mb-2">
+                            <%= check_box_tag "admin_notification[user_ids][]", user.id, 
+                                false, 
+                                { class: "form-check-input user-checkbox", id: "user_#{user.id}" } %>
+                            <%= label_tag "user_#{user.id}", class: "form-check-label" do %>
+                              <%= user.email %>
+                              <% if user.admin? %>
+                                <span class="badge bg-warning text-dark ms-1">Admin</span>
+                              <% end %>
+                            <% end %>
+                          </div>
+                        <% end %>
+                      </div>
+                      
+                      <div class="form-text mt-2">
+                        <strong>Total users:</strong> <%= @users.count %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                  <%= link_to "Cancel", admin_notifications_path, 
+                      class: "btn btn-outline-secondary" %>
+                  
+                  <div>
+                    <%= form.submit "Send Notification", 
+                        class: "btn btn-primary",
+                        data: { confirm: "Are you sure you want to send this notification? This action cannot be undone." } %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-header">
+              <h6 class="card-title mb-0">
+                <i class="bi bi-lightbulb"></i> Tips for Great Notifications
+              </h6>
+            </div>
+            <div class="card-body">
+              <ul class="list-unstyled mb-0">
+                <li class="mb-3">
+                  <i class="bi bi-check-circle-fill text-success me-2"></i>
+                  <strong>Be Clear:</strong> Use a descriptive subject line that tells users what to expect.
+                </li>
+                <li class="mb-3">
+                  <i class="bi bi-check-circle-fill text-success me-2"></i>
+                  <strong>Keep it Concise:</strong> Write engaging content that gets to the point quickly.
+                </li>
+                <li class="mb-3">
+                  <i class="bi bi-check-circle-fill text-success me-2"></i>
+                  <strong>Feature Events:</strong> Attach relevant events to make your notification more valuable.
+                </li>
+                <li class="mb-0">
+                  <i class="bi bi-check-circle-fill text-success me-2"></i>
+                  <strong>Target Wisely:</strong> Select specific users when appropriate, or send to all for general announcements.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card mt-3">
+            <div class="card-header">
+              <h6 class="card-title mb-0">
+                <i class="bi bi-preview"></i> Preview
+              </h6>
+            </div>
+            <div class="card-body">
+              <!-- Exact replica of email template -->
+              <div style="background-color: #f4f4f4; padding: 20px 0; border-radius: 8px;">
+                <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); overflow: hidden">
+                  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px 40px; text-align: center;">
+                    <h1 style="margin: 0; font-size: 28px; font-weight: 300; letter-spacing: 1px; color: white;">NoteSync</h1>
+                  </div>
+                  
+                  <div style="padding: 40px;">
+                    <div style="margin-bottom: 30px;">
+                      <h2 style="color: #2c3e50; font-size: 24px; margin: 0 0 20px 0; font-weight: 400;">
+                        Hello User!
+                      </h2>
+                      
+                      <div id="preview-content" style="font-size: 16px; line-height: 1.6; color: #495057; margin-bottom: 30px; white-space: pre-wrap;">
+                        Your message content will appear here...
+                      </div>
+                      
+                      <div style="font-size: 14px; color: #6c757d; font-style: italic; border-left: 3px solid #667eea; padding-left: 15px; margin: 20px 0;">
+                        <strong>From:</strong> admin@example.com
+                      </div>
+                    </div>
+
+                    <div id="preview-events" style="margin: 40px 0;">
+                      <!-- Events will appear here -->
+                    </div>
+
+                    <div style="margin-top: 40px; padding: 25px; background-color: #f8f9fa; border-radius: 8px; border-left: 4px solid #667eea;">
+                      <p style="margin: 0; font-size: 16px; color: #495057;">
+                        <strong>Stay in the loop!</strong><br>
+                        Don't miss out on the latest events and updates from your local music scene.
+                      </p>
+                      
+                      <div style="margin-top: 20px;">
+                        <a href="#" style="display: inline-block; background-color: #667eea; color: white; padding: 12px 25px; text-decoration: none; border-radius: 25px; font-weight: 500; font-size: 14px;">
+                          View Full Calendar
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style="background-color: #f8f9fa; padding: 30px 40px; text-align: center; border-top: 1px solid #e9ecef; color: #6c757d; font-size: 14px;">
+                    <p style="color: #6c757d; margin: 0;">You're receiving this because you're subscribed to NoteSync notifications.</p>
+                    <div style="margin-top: 15px;">
+                      <a href="#" style="color: #667eea; text-decoration: none; margin: 0 10px;">View Calendar</a>
+                      <a href="#" style="color: #667eea; text-decoration: none; margin: 0 10px;">Manage Preferences</a>
+                    </div>
+                    <p style="margin-top: 15px; font-size: 12px; color: #adb5bd; margin-bottom: 0;">
+                      © 2025 NoteSync. All rights reserved.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+
+// Live preview functionality - exact replica of email
+function updatePreview() {
+  const content = document.getElementById('admin_notification_content').value;
+  const selectedEvents = document.querySelectorAll('input[name="admin_notification[event_ids][]"]:checked');
+  const eventsPreview = document.getElementById('preview-events');
+  
+  // Update content with line breaks preserved
+  const previewContent = document.getElementById('preview-content');
+  if (content.trim()) {
+    previewContent.innerHTML = content.replace(/\n/g, '<br>');
+  } else {
+    previewContent.textContent = 'Your message content will appear here...';
+  }
+  
+     // Update events preview to match email exactly with real data
+   if (selectedEvents.length > 0) {
+     let eventsHtml = `
+       <div style="margin: 40px 0;">
+         <h3 style="color: #2c3e50; font-size: 20px; margin: 0 0 25px 0; font-weight: 500; border-bottom: 2px solid #667eea; padding-bottom: 10px;">
+           Featured Events
+         </h3>
+     `;
+     
+     selectedEvents.forEach(checkbox => {
+       // Get real event data from data attributes
+       const eventName = checkbox.dataset.eventName;
+       const eventDate = checkbox.dataset.eventDate;
+       const venueName = checkbox.dataset.venueName;
+       const venueAddress = checkbox.dataset.venueAddress;
+       const bandsData = JSON.parse(checkbox.dataset.bands);
+       
+       eventsHtml += `
+         <div style="border: 1px solid #e9ecef; border-radius: 8px; margin: 20px 0; overflow: hidden; transition: box-shadow 0.3s ease;">
+       `;
+       
+       // Add band photos exactly like in the email (up to 4 bands)
+       if (bandsData.length > 0) {
+         eventsHtml += `
+           <div style="display: flex; flex-wrap: nowrap; overflow: hidden; border-bottom: 1px solid #e9ecef; background-color: #f8f9fa;">
+         `;
+         
+         const bandsToShow = bandsData.slice(0, 4);
+         bandsToShow.forEach((band, index) => {
+           // For 2+ bands, let them go side by side with overflow
+           const flexBasis = bandsData.length === 1 ? '100%' : '50%';
+           eventsHtml += `
+             <div style="flex: 0 0 ${flexBasis}; min-width: 0;">
+               <img src="${band.photo}" 
+                    alt="${band.name}" 
+                    style="width: 100%; height: 150px; object-fit: cover; border: none; display: block;">
+             </div>
+           `;
+         });
+         
+         eventsHtml += '</div>';
+       }
+       
+       eventsHtml += `
+           <div style="padding: 20px;">
+             <h4 style="font-size: 20px; font-weight: 600; color: #2c3e50; margin: 0 0 10px 0;">${eventName}</h4>
+             
+             <div style="color: #6c757d; font-size: 14px; margin: 5px 0;">
+               <strong>Venue:</strong> 
+               <span style="font-weight: 600; color: #495057;">${venueName}</span>
+             </div>
+             
+             <div style="color: #6c757d; font-size: 14px; margin: 5px 0;">
+               <strong>Date:</strong> 
+               ${eventDate}
+             </div>
+             
+             ${venueAddress ? `
+             <div style="color: #6c757d; font-size: 14px; margin: 5px 0;">
+               <strong>Address:</strong> 
+               ${venueAddress}
+             </div>
+             ` : ''}
+             
+             ${bandsData.length > 0 ? `
+             <div style="margin-top: 15px;">
+               <strong style="color: #495057; font-size: 14px;">Performing:</strong><br>
+               ${bandsData.map(band => 
+                 `<span style="display: inline-block; background-color: #f8f9fa; padding: 4px 12px; margin: 2px; border-radius: 20px; font-size: 12px; color: #495057; border: 1px solid #dee2e6;">${band.name}</span>`
+               ).join('')}
+             </div>
+             ` : ''}
+           </div>
+         </div>
+       `;
+     });
+     
+     eventsHtml += '</div>';
+     eventsPreview.innerHTML = eventsHtml;
+   } else {
+     eventsPreview.innerHTML = '';
+   }
+}
+
+// Initialize preview on page load and add real-time updates
+document.addEventListener('DOMContentLoaded', function() {
+  // Get form elements
+  const subjectInput = document.getElementById('admin_notification_subject');
+  const contentInput = document.getElementById('admin_notification_content');
+  const eventCheckboxes = document.querySelectorAll('input[name="admin_notification[event_ids][]"]');
+  
+  // Add event listeners for real-time updates
+  if (contentInput) {
+    contentInput.addEventListener('input', updatePreview);
+    contentInput.addEventListener('keyup', updatePreview);
+    contentInput.addEventListener('paste', function() {
+      setTimeout(updatePreview, 10); // Small delay for paste to complete
+    });
+  }
+  
+  // Add event listeners for event checkboxes
+  eventCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', updatePreview);
+  });
+  
+  // Initial preview update with default content
+  setTimeout(updatePreview, 100); // Small delay to ensure DOM is ready
+});
+
+// Update preview when select all/deselect all buttons are clicked
+function selectAllUsers() {
+  document.querySelectorAll('.user-checkbox').forEach(checkbox => {
+    checkbox.checked = true;
+  });
+  updatePreview(); // Update preview after selection
+}
+
+function deselectAllUsers() {
+  document.querySelectorAll('.user-checkbox').forEach(checkbox => {
+    checkbox.checked = false;
+  });
+  updatePreview(); // Update preview after deselection
+}
+
+// Form validation
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    var forms = document.getElementsByClassName('needs-validation');
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+</script>

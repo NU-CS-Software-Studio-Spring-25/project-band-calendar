@@ -1,0 +1,38 @@
+NoteSync Notification
+==========================
+
+Hello <%= @user.email.split('@').first.capitalize %>!
+
+<%= @content %>
+
+<% if @sent_by %>
+From: <%= @sent_by.email %>
+<% end %>
+
+<% if @events&.any? %>
+
+FEATURED EVENTS
+===============
+
+<% @events.each_with_index do |event, index| %>
+<%= index + 1 %>. <%= event.name %>
+   Date: <%= event.date.strftime("%A, %B %d, %Y at %I:%M %p") %>
+   Venue: <%= event.venue.name %>
+   <% if event.venue.street_address.present? %>
+   Address: <%= event.venue.street_address %>, <%= event.venue.city %>, <%= event.venue.state %>
+   <% end %>
+   <% if event.bands.any? %>
+   Performing: <%= event.bands.map(&:name).join(', ') %>
+   <% end %>
+   <% if event.venue.description.present? %>
+   About Venue: <%= truncate(event.venue.description, length: 100) %>
+   <% end %>
+
+<% end %>
+<% end %>
+
+--
+Stay in the loop! Visit the full calendar at: <%= root_url %>
+
+You're receiving this because you're subscribed to NoteSync notifications.
+© <%= Date.current.year %> NoteSync. All rights reserved.
