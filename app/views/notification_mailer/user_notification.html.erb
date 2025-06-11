@@ -1,0 +1,92 @@
+<div style="margin-bottom: 30px;">
+  <h2 style="color: #2c3e50; font-size: 24px; margin: 0 0 20px 0; font-weight: 400;">
+    Hello <%= @user.email.split('@').first.capitalize %>!
+  </h2>
+  
+  <div style="font-size: 16px; line-height: 1.6; color: #495057; margin-bottom: 30px;">
+    <%= simple_format(@content) %>
+  </div>
+  
+  <% if @sent_by %>
+    <p style="font-size: 14px; color: #6c757d; font-style: italic; border-left: 3px solid #667eea; padding-left: 15px; margin: 20px 0;">
+      <strong>From:</strong> <%= @sent_by.email %>
+    </p>
+  <% end %>
+</div>
+
+<% if @events&.any? %>
+  <div style="margin: 40px 0;">
+    <h3 style="color: #2c3e50; font-size: 20px; margin: 0 0 25px 0; font-weight: 500; border-bottom: 2px solid #667eea; padding-bottom: 10px;">
+      Featured Events
+    </h3>
+    
+    <% @events.each do |event| %>
+      <div class="event-card">
+        <% if event.bands.any? %>
+          <!-- Band photos grid -->
+          <div style="display: flex; flex-wrap: wrap; border-bottom: 1px solid #e9ecef; background-color: #f8f9fa;">
+            <% event.bands.limit(4).each_with_index do |band, index| %>
+              <div style="flex: 1; min-width: 150px; max-width: <%= event.bands.count == 1 ? '100%' : '50%' %>;">
+                <img src="<%= band.photo_url.present? ? band.photo_url : Faker::Avatar.image %>" 
+                     alt="<%= band.name %>" 
+                     style="width: 100%; height: 150px; object-fit: cover; border: none;">
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+        
+        <div class="event-details">
+          <h4 class="event-title"><%= event.name %></h4>
+          
+          <div class="event-info">
+            <strong>Venue:</strong> 
+            <span class="venue-name"><%= event.venue.name %></span>
+          </div>
+          
+          <div class="event-info">
+            <strong>Date:</strong> 
+            <%= event.date.strftime("%A, %B %d, %Y at %I:%M %p") %>
+          </div>
+          
+          <% if event.venue.street_address.present? %>
+            <div class="event-info">
+              <strong>Address:</strong> 
+              <%= event.venue.street_address %>, <%= event.venue.city %>, <%= event.venue.state %>
+            </div>
+          <% end %>
+          
+          <% if event.bands.any? %>
+            <div class="band-list">
+              <strong style="color: #495057; font-size: 14px;">Performing:</strong><br>
+              <% event.bands.each do |band| %>
+                <span class="band-item"><%= band.name %></span>
+              <% end %>
+            </div>
+          <% end %>
+          
+          <% if event.venue.description.present? %>
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+              <p style="font-size: 14px; color: #6c757d; margin: 0; line-height: 1.5;">
+                <%= truncate(event.venue.description, length: 150) %>
+              </p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<div style="margin-top: 40px; padding: 25px; background-color: #f8f9fa; border-radius: 8px; border-left: 4px solid #667eea;">
+  <p style="margin: 0; font-size: 16px; color: #495057;">
+    <strong>Stay in the loop!</strong><br>
+    Don't miss out on the latest events and updates from your local music scene.
+  </p>
+  
+  <div style="margin-top: 20px;">
+    <a href="<%= root_url %>" 
+       style="display: inline-block; background-color: #667eea; color: white; padding: 12px 25px; text-decoration: none; border-radius: 25px; font-weight: 500; font-size: 14px;">
+      View Full Calendar
+    </a>
+  </div>
+</div>
