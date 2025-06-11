@@ -1,70 +1,90 @@
+# EventsController handles the creation, display, approval, editing,
+# and deletion of events. It supports filtering by date and location,
+# pagination, and JSON rendering for integration.
+#
+# == Filters
+# * +authenticate_user!+ – required for all actions except :index and :show
+# * +authorize_admin!+ – required for :approve and :disapprove actions
+#
+# == Actions
+# * index        - Lists events (approved or pending), supports filters and pagination
+# * show         - Shows details of a specific event including its bands
+# * new          - Renders form to create a new event
+# * create       - Saves a new event to the database
+# * edit         - Renders form to edit an existing event
+# * update       - Updates an existing event
+# * destroy      - Deletes an event
+# * approve      - Approves a submitted event (admin only)
+# * disapprove   - Unapproves an event (admin only)
+#
 class EventsController < ApplicationController
   before_action :authenticate_user!, except: [ :index, :show ]
   before_action :authorize_admin!, only: [ :approve, :disapprove ]
 
-def index
-  # Start with base scope (pending or approved)
-  scope = params[:pending] && current_user_admin? ? Event.pending : Event.approved
+  # GET /events
+  # Displays approved or pending events, optionally filtered by month or location.
+  # Renders HTML or JSON.
+  def index
+    scope = params[:pending] && current_user_admin? ? Event.pending : Event.approved
 
-  # Apply month filter if present
-  if params[:month].present?
-    begin
-      date = Date.strptime(params[:month], "%Y-%m")
-      scope = scope.where(date: date.beginning_of_month..date.end_of_month)
-      flash.now[:notice] = "Showing events for #{date.strftime('%B %Y')}."
-    rescue ArgumentError
-      flash.now[:alert] = "Invalid month format."
+    if params[:month].present?
+      begin
+        date = Date.strptime(params[:month], "%Y-%m")
+        scope = scope.where(date: date.beginning_of_month..date.end_of_month)
+        flash.now[:notice] = "Showing events for #{date.strftime('%B %Y')}."
+      rescue ArgumentError
+        flash.now[:alert] = "Invalid month format."
+      end
     end
-  #location
+
     if params[:lat].present? && params[:lon].present?
       radius = params[:radius] || 10
       @events = Event.joins(:venue).merge(
-        Venue.near([params[:lat], params[:lon]], radius)
+        Venue.near([ params[:lat], params[:lon] ], radius)
       )
     else
       @events = Event.all
     end
-  end
 
-  # Finally, apply pagination to the filtered scope
-  @events = scope.page(params[:page]).per(3)
+    @events = scope.page(params[:page]).per(3)
 
-  respond_to do |format|
-    format.html
-    format.json do
-      render json: @events.map { |event|
-        {
-          title: event.name,
-          start: event.date.strftime("%Y-%m-%d"),
-          venue: event.venue.name
+    respond_to do |format|
+      format.html
+      format.json do
+        render json: @events.map { |event|
+          {
+            title: event.name,
+            start: event.date.strftime("%Y-%m-%d"),
+            venue: event.venue.name
+          }
         }
-      }
+      end
     end
   end
-end
 
-
-
+  # GET /events/:id
+  # Shows a single event, its bands, and band event times.
   def show
     @event = Event.find(params[:id])
     @bands = @event.bands
     @band_events = @event.band_events.includes(:band).ordered_by_time
   end
 
+  # GET /events/new
+  # Renders the form to create a new event.
   def new
     @event = Event.new
     @venues = Venue.all.order(:name)
   end
 
+  # POST /events
+  # Creates a new event, associates bands, and optionally auto-approves it.
   def create
     @event = Event.new(event_params)
     @event.submitted_by = current_user
-
-    # If user is admin, auto-approve the event
     @event.approved = current_user_admin?
 
     if @event.save
-      # Handle band associations if band_ids are provided
       if params[:event][:band_ids].present?
         process_band_associations
       end
@@ -76,53 +96,46 @@ end
       end
     else
       @venues = Venue.all.order(:name)
-
-      # Add flash alert for duplicate event
       if @event.errors[:name].include?("already exists for this date")
         flash.now[:alert] = "An event named '#{@event.name}' already exists on #{@event.date&.strftime('%B %d, %Y')}."
       end
-
       render :new, status: :unprocessable_entity
     end
   end
 
+  # GET /events/:id/edit
+  # Renders the form to edit an event.
   def edit
     @event = Event.find(params[:id])
     authorize_event_edit!
     @venues = Venue.all.order(:name)
   end
 
+  # PATCH/PUT /events/:id
+  # Updates an event and its associated bands.
   def update
     @event = Event.find(params[:id])
     authorize_event_edit!
 
-    # If event is being updated by a non-admin, set approved to false
-    unless current_user_admin?
-      event_params_with_approval = event_params.merge(approved: false)
-    else
-      event_params_with_approval = event_params
-    end
+    event_params_with_approval = current_user_admin? ? event_params : event_params.merge(approved: false)
 
     if @event.update(event_params_with_approval)
-      # Update band associations
       @event.band_events.destroy_all
       if params[:event][:band_ids].present?
         process_band_associations
       end
-
       redirect_to @event, notice: "Event was successfully updated."
     else
       @venues = Venue.all.order(:name)
-
-      # Add flash alert for duplicate event
       if @event.errors[:name].include?("already exists for this date")
         flash.now[:alert] = "An event named '#{@event.name}' already exists on #{@event.date&.strftime('%B %d, %Y')}."
       end
-
       render :edit, status: :unprocessable_entity
     end
   end
 
+  # DELETE /events/:id
+  # Deletes an event.
   def destroy
     @event = Event.find(params[:id])
     authorize_event_edit!
@@ -130,12 +143,16 @@ end
     redirect_to events_path, notice: "Event was successfully deleted.", status: :see_other
   end
 
+  # PATCH /events/:id/approve
+  # Admin-only action to approve an event.
   def approve
     @event = Event.find(params[:id])
     @event.update(approved: true)
     redirect_to @event, notice: "Event has been approved."
   end
 
+  # PATCH /events/:id/disapprove
+  # Admin-only action to unapprove an event.
   def disapprove
     @event = Event.find(params[:id])
     @event.update(approved: false)
@@ -144,22 +161,19 @@ end
 
   private
 
+  # Strong parameters for event creation and update.
   def event_params
     params.require(:event).permit(:name, :venue_id, :date)
   end
 
+  # Associates bands and timing info with an event.
   def process_band_associations
     band_times = params[:band_times] || {}
 
     params[:event][:band_ids].reject(&:blank?).each_with_index do |band_id, index|
-      # Default position is index + 1
       position = index + 1
-
-      # Check if we have timing info for this band
       if band_times[band_id].present?
         times = band_times[band_id]
-
-        # Create band_event with timing information
         @event.band_events.create!(
           band_id: band_id,
           set_position: times[:set_position].presence || position,
@@ -168,7 +182,6 @@ end
           notes: times[:notes]
         )
       else
-        # Create band_event without timing information
         @event.band_events.create!(
           band_id: band_id,
           set_position: position
@@ -177,20 +190,13 @@ end
     end
   end
 
+  # Parses time from a string, returns a Time object or nil.
   def parse_time(time_str)
     return nil if time_str.blank?
+    return Time.parse(time_str) if time_str.include?("T") rescue nil
 
-    # If the time string already contains the date part, parse directly
-    if time_str.include?("T")
-      return Time.parse(time_str) rescue nil
-    end
-
-    # Otherwise, combine with the event date
     begin
       hour, minute = time_str.split(":").map(&:to_i)
-      return nil if hour.nil? || minute.nil?
-
-      # Use event date with the provided time
       event_date = @event.date.to_date
       Time.new(event_date.year, event_date.month, event_date.day, hour, minute)
     rescue
@@ -198,6 +204,7 @@ end
     end
   end
 
+  # Checks if current user is allowed to edit the event.
   def authorize_event_edit!
     unless current_user_admin? || (@event.submitted_by == current_user)
       flash[:alert] = "You don't have permission to edit this event."
