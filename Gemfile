@@ -52,6 +52,10 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+  
+  # RSpec testing framework
+  gem "rspec-rails"
+  gem "factory_bot_rails"
 end
 
 group :development do
@@ -63,6 +67,12 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  
+  # Better testing matchers
+  gem "shoulda-matchers"
+  
+  # For controller testing with assigns
+  gem "rails-controller-testing"
 end
 
 gem "devise", "~> 4.9"
