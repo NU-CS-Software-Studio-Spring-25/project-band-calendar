@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_10_195643) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_10_212906) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "admin_notifications", force: :cascade do |t|
+    t.text "subject"
+    t.text "content"
+    t.text "event_ids"
+    t.text "user_ids"
+    t.bigint "sent_by_id", null: false
+    t.datetime "sent_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sent_by_id"], name: "index_admin_notifications_on_sent_by_id"
+  end
 
   create_table "band_events", force: :cascade do |t|
     t.bigint "event_id", null: false
@@ -81,11 +93,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_10_195643) do
     t.boolean "all_ages", default: false
     t.boolean "has_food", default: false
     t.boolean "has_bar", default: false
-    t.float "latitude"
-    t.float "longitude"
     t.index ["name"], name: "index_venues_on_name", unique: true
   end
 
+  add_foreign_key "admin_notifications", "users", column: "sent_by_id"
   add_foreign_key "band_events", "bands"
   add_foreign_key "band_events", "events"
   add_foreign_key "events", "users", column: "submitted_by_id"

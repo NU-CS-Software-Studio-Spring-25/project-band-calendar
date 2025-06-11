@@ -98,6 +98,8 @@ GEM
     concurrent-ruby (1.3.5)
     connection_pool (2.5.2)
     crass (1.0.6)
+    css_parser (1.21.1)
+      addressable
     csv (3.3.5)
     date (3.4.1)
     debug (1.10.0)
@@ -109,6 +111,7 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    diff-lcs (1.6.2)
     domain_name (0.6.20240107)
     dotenv (3.1.8)
     drb (2.2.1)
@@ -116,6 +119,11 @@ GEM
     erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
+    factory_bot (6.5.3)
+      activesupport (>= 6.1.0)
+    factory_bot_rails (6.4.4)
+      factory_bot (~> 6.5)
+      railties (>= 5.0.0)
     faker (3.5.1)
       i18n (>= 1.8.11, < 2)
     faraday (2.13.1)
@@ -133,6 +141,7 @@ GEM
     globalid (1.2.1)
       activesupport (>= 6.1)
     hashie (5.0.0)
+    htmlentities (4.3.4)
     http-cookie (1.0.8)
       domain_name (~> 0.5)
     i18n (1.14.7)
@@ -253,6 +262,14 @@ GEM
     pg (1.5.9)
     pp (0.6.2)
       prettyprint
+    premailer (1.27.0)
+      addressable
+      css_parser (>= 1.19.0)
+      htmlentities (>= 4.0.0)
+    premailer-rails (1.12.0)
+      actionmailer (>= 3)
+      net-smtp
+      premailer (~> 1.7, >= 1.7.9)
     prettyprint (0.2.0)
     prism (1.4.0)
     propshaft (1.1.0)
@@ -294,6 +311,10 @@ GEM
       activesupport (= 8.0.2)
       bundler (>= 1.15.0)
       railties (= 8.0.2)
+    rails-controller-testing (1.0.5)
+      actionpack (>= 5.0.1.rc1)
+      actionview (>= 5.0.1.rc1)
+      activesupport (>= 5.0.1.rc1)
     rails-dom-testing (2.2.0)
       activesupport (>= 5.0.0)
       minitest
@@ -324,6 +345,23 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     rexml (3.4.1)
+    rspec-core (3.13.4)
+      rspec-support (~> 3.13.0)
+    rspec-expectations (3.13.5)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-mocks (3.13.5)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-rails (8.0.0)
+      actionpack (>= 7.2)
+      activesupport (>= 7.2)
+      railties (>= 7.2)
+      rspec-core (~> 3.13)
+      rspec-expectations (~> 3.13)
+      rspec-mocks (~> 3.13)
+      rspec-support (~> 3.13)
+    rspec-support (3.13.4)
     rspotify (2.12.4)
       addressable (~> 2.8.0)
       omniauth-oauth2 (>= 1.6)
@@ -365,6 +403,8 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    shoulda-matchers (6.5.0)
+      activesupport (>= 5.2.0)
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
@@ -447,19 +487,25 @@ DEPENDENCIES
   debug
   devise (~> 4.9)
   dotenv
+  factory_bot_rails
   faker
   geocoder
   importmap-rails
   jbuilder
   kamal
   kaminari
+  nokogiri
   pg (~> 1.1)
+  premailer-rails
   propshaft
   puma (>= 5.0)
   rails (~> 8.0.2)
+  rails-controller-testing
+  rspec-rails
   rspotify
   rubocop-rails-omakase
   selenium-webdriver
+  shoulda-matchers
   solid_cable
   solid_cache
   solid_queue
