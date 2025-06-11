@@ -78,6 +78,7 @@
               <% if user_signed_in? %>
                 <% if current_user_admin? %>
                   <li class="nav-item"><%= link_to "Pending Events", events_path(pending: true), class: "nav-link" %></li>
+                  <li class="nav-item"><%= link_to "Email Notifications", admin_notifications_path, class: "nav-link" %></li>
                 <% end %>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
