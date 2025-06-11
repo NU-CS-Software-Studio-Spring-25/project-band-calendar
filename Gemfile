@@ -73,6 +73,10 @@ group :test do
   
   # For controller testing with assigns
   gem "rails-controller-testing"
+  
+  # Cucumber for BDD testing
+  gem "cucumber-rails", require: false
+  gem "database_cleaner-active_record"
 end
 
 gem "devise", "~> 4.9"
