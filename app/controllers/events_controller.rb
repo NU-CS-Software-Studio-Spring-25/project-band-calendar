@@ -38,10 +38,10 @@ class EventsController < ApplicationController
     end
 
     if params[:lat].present? && params[:lon].present?
-      radius = params[:radius] || 10
-      @events = Event.joins(:venue).merge(
-        Venue.near([ params[:lat], params[:lon] ], radius)
-      )
+      radius = (params[:radius] || 10).to_f
+      lat = params[:lat].to_f
+      lon = params[:lon].to_f
+      @events = Event.includes(:venue).where(venues: { id: Venue.near([lat, lon], radius).pluck(:id) })
     else
       @events = Event.all
     end

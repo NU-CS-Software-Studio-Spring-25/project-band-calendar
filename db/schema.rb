@@ -93,6 +93,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_10_212906) do
     t.boolean "all_ages", default: false
     t.boolean "has_food", default: false
     t.boolean "has_bar", default: false
+    t.float "latitude"
+    t.float "longitude"
     t.index ["name"], name: "index_venues_on_name", unique: true
   end
 
