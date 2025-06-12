@@ -47,7 +47,9 @@ class Event < ApplicationRecord
   # @param lon [Float] longitude
   # @param radius_in_miles [Integer] search radius (default: 10 miles)
   # @return [ActiveRecord::Relation] events near the given location
-  def self.near_location(lat, lon, radius_in_miles = 10)
-    joins(:venue).merge(Venue.near([ lat, lon ], radius_in_miles))
-  end
+  def self.near_location(lat, lon, radius = 10)
+    joins(:venue)
+      .merge(Venue.near([lat, lon], radius))
+      .select("events.*, venues.name AS venue_name")
+  end  
 end
