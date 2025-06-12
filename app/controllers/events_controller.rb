@@ -38,6 +38,17 @@ class EventsController < ApplicationController
       end
     end
 
+    # Handle FullCalendar date range requests (for JSON format)
+    if params[:start].present? && params[:end].present?
+      begin
+        start_date = Date.parse(params[:start])
+        end_date = Date.parse(params[:end])
+        scope = scope.where(date: start_date..end_date)
+      rescue ArgumentError
+        # Invalid date format, ignore and show all events
+      end
+    end
+
     if params[:lat].present? && params[:lon].present?
       radius = (params[:radius] || 10).to_f
       lat = params[:lat].to_f
@@ -47,21 +58,45 @@ class EventsController < ApplicationController
     else
       @events = Event.all
     end
-    
 
-    @events = scope.page(params[:page]).per(3)
+    # Apply the scope to @events
+    @events = @events.merge(scope)
+    
+    # Apply hidden events filter if user is signed in
     if user_signed_in?
       @events = @events.where.not(id: current_user.hidden_events.select(:id))
     end
 
     respond_to do |format|
-      format.html
+      format.html do
+        # Only apply pagination for HTML format
+        @events = @events.page(params[:page]).per(3)
+      end
       format.json do
+        # For JSON (calendar), return all events without pagination
+        # Include necessary associations and order by date
+        @events = @events.includes(:venue, bands: []).order(:date)
         render json: @events.map { |event|
           {
+            id: event.id,
             title: event.name,
             start: event.date.strftime("%Y-%m-%d"),
-            venue: event.venue.name
+            url: event_path(event),
+            venue: {
+              name: event.venue.name,
+              city: event.venue.city,
+              state: event.venue.state,
+              address: event.venue.street_address
+            },
+            bands: event.bands.map { |band|
+              {
+                name: band.name,
+                photo_url: band.photo_url.present? ? band.photo_url : nil
+              }
+            },
+            formatted_date: event.date.strftime("%A, %B %d, %Y"),
+            formatted_time: event.date.strftime("%I:%M %p"),
+            pending: event.pending?
           }
         }
       end
