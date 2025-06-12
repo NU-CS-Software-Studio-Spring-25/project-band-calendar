@@ -28,6 +28,7 @@ class Event < ApplicationRecord
   # Validations
   validates :name, :date, presence: true
   validates :name, uniqueness: { scope: :date, message: "already exists for this date" }
+  validates :name, length: { maximum: 255 }
 
   # Scopes
   scope :approved, -> { where(approved: true) }

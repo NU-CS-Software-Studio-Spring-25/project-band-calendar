@@ -18,11 +18,14 @@ Rails.application.routes.draw do
   # root "posts#index"
   resources :events do
     collection do
-      get :calendar  # 对应 /events/calendar
+      get :calendar  
+      get :recent_pdf   
     end
     member do
       patch :approve
       patch :disapprove
+      post :hide
+      post :show_again
     end
   end
   resources :bands

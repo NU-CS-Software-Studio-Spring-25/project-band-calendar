@@ -6,17 +6,26 @@
           <div class="d-flex justify-content-between align-items-center flex-wrap">
             <h1 class="h3 mb-0">NoteSync</h1>
             
-            <div class="d-flex align-items-center">
-              <%= link_to date: @date.yesterday, class: "btn btn-sm btn-outline-secondary me-2", aria: { label: "Previous day" } do %>
-                <i class="fas fa-chevron-left"></i>
-              <% end %>
+            <div class="d-flex align-items-center gap-3">
+              <!-- Date Navigation -->
+              <div class="d-flex align-items-center">
+                <%= link_to date: @date.yesterday, class: "btn btn-sm btn-outline-secondary me-2", aria: { label: "Previous day" } do %>
+                  <i class="fas fa-chevron-left"></i>
+                <% end %>
+                
+                <form class="d-flex me-2" action="<%= root_path %>" method="get">
+                  <input type="date" name="date" value="<%= @date.strftime('%Y-%m-%d') %>" class="form-control form-control-sm" onchange="this.form.submit()" />
+                </form>
+                
+                <%= link_to date: @date.tomorrow, class: "btn btn-sm btn-outline-secondary",aria: { label: "Next day" } do %>
+                  <i class="fas fa-chevron-right"></i>
+                <% end %>
+              </div>
               
-              <form class="d-flex me-2" action="<%= root_path %>" method="get">
-                <input type="date" name="date" value="<%= @date.strftime('%Y-%m-%d') %>" class="form-control form-control-sm" onchange="this.form.submit()" />
-              </form>
-              
-              <%= link_to date: @date.tomorrow, class: "btn btn-sm btn-outline-secondary",aria: { label: "Next day" } do %>
-                <i class="fas fa-chevron-right"></i>
+              <!-- Calendar View Button -->
+              <%= link_to calendar_events_path, class: "btn btn-primary btn-sm", data: { turbo: false }, aria: { label: "View events in calendar format" } do %>
+                <i class="fas fa-calendar-alt me-1"></i>
+                Calendar View
               <% end %>
             </div>
           </div>
@@ -68,6 +77,9 @@
                           <% event.band_events.ordered_by_position.includes(:band).each_with_index do |band_event, index| %>
                             <div class="d-flex align-items-center mb-1">
                               <span class="badge bg-secondary me-2"><%= band_event.set_position || index + 1 %></span>
+                              <% if band_event.band.photo_url.present? %>
+                                <%= image_tag band_event.band.photo_url, class: "rounded-circle me-2", style: "width: 32px; height: 32px; object-fit: cover;", alt: band_event.band.name %>
+                              <% end %>
                               <strong><%= band_event.band.name %></strong>
                               <% if band_event.start_time.present? %>
                                 <span class="ms-2 small text-muted">

@@ -87,3 +87,6 @@ gem "nokogiri"         # Required by premailer-rails
 gem "dotenv", groups: [ :development, :test ]
 gem "rspotify"
 gem "kaminari" # Pagination for Active Record collections
+
+gem 'prawn' #for download pdf
+

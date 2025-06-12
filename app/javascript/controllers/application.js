@@ -1,15 +1,9 @@
-import { Application } from "@hotwired/stimulus"
-import "@hotwired/turbo-rails"
+import { Application } from "@hotwired/stimulus";
 
-import GeoController from "/controllers/geo_controller"
+const application = Application.start();
 
-const application = Application.start()
-application.register("geo", GeoController)
+// Configure Stimulus development experience
+application.debug = false;
+window.Stimulus = application;
 
-application.debug = true
-window.Stimulus = application
-
-const context = require.context("./controllers", true, /\.js$/)
-application.load(definitionsFromContext(context))
-
-export { application }
+export { application };

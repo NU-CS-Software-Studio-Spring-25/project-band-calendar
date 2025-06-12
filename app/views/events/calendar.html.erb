@@ -1,7 +1,7 @@
-<h1 class="mb-4 text-center" id="calendar-heading">Event Calendar</h1>
+<h1 class="mb-4 text-center text-light" id="calendar-heading">Event Calendar</h1>
 
 <div id="calendar" 
-     style="max-width: 900px; margin: auto;" 
+     style="max-width: 900px; margin: auto; background-color: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" 
      role="region" 
      aria-label="Full event calendar" 
      aria-describedby="calendar-heading">
@@ -9,15 +9,90 @@
 
 <%= link_to "← Back to Events List", events_path, 
             class: "btn btn-outline-secondary mt-4 d-block text-center", 
-            aria-label: "Back to the list of events" %>
+            :"aria-label" => "Back to the list of events" %>
+
+<div class="text-center mt-2">
+  <%= link_to "← Back to Daily View", root_path, 
+              class: "btn btn-outline-primary", 
+              :"aria-label" => "Back to daily events view" %>
+</div>
+
+<!-- Tooltip container -->
+<div id="event-tooltip" class="d-none position-absolute" style="z-index: 1000; background: white; border: 1px solid #ccc; border-radius: 8px; padding: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); max-width: 300px;">
+</div>
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     const calendarEl = document.getElementById("calendar");
+    const tooltip = document.getElementById("event-tooltip");
+    
     const calendar = new FullCalendar.Calendar(calendarEl, {
+      themeSystem: 'bootstrap',
       initialView: 'dayGridMonth',
-      events: "/events.json"
+      events: "/events.json",
+      eventDisplay: 'block',
+      eventClick: function(info) {
+        // Navigate to event page when clicked
+        window.location.href = info.event.extendedProps.url || `/events/${info.event.id}`;
+      },
+      eventMouseEnter: function(info) {
+        const event = info.event;
+        const props = event.extendedProps;
+        
+        // Build tooltip content
+        let tooltipContent = `
+          <div>
+            <h6 class="mb-2 text-primary fw-bold">${event.title}</h6>
+            <p class="mb-1 small"><strong>📅 ${props.formatted_date}</strong></p>
+            <p class="mb-1 small"><strong>🕐 ${props.formatted_time}</strong></p>
+            <p class="mb-2 small"><strong>📍 ${props.venue.name}</strong></p>
+        `;
+        
+        if (props.venue.city) {
+          tooltipContent += `<p class="mb-2 small text-muted">${props.venue.city}${props.venue.state ? ', ' + props.venue.state : ''}</p>`;
+        }
+        
+        if (props.bands && props.bands.length > 0) {
+          tooltipContent += `<div class="mb-2"><strong class="small">🎵 Lineup:</strong></div>`;
+          tooltipContent += `<div class="d-flex flex-wrap gap-2 mb-2">`;
+          
+          props.bands.forEach(band => {
+            tooltipContent += `<div class="d-flex align-items-center gap-1 small">`;
+            
+            if (band.photo_url) {
+              tooltipContent += `<img src="${band.photo_url}" alt="${band.name}" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;">`;
+            } else {
+              tooltipContent += `<div style="width: 24px; height: 24px; border-radius: 50%; background: #6c757d; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px;">${band.name.charAt(0)}</div>`;
+            }
+            
+            tooltipContent += `<span>${band.name}</span></div>`;
+          });
+          
+          tooltipContent += `</div>`;
+        } else {
+          tooltipContent += `<p class="small text-muted">No bands announced yet</p>`;
+        }
+        
+        if (props.pending) {
+          tooltipContent += `<span class="badge bg-warning text-dark small">Pending Approval</span>`;
+        }
+        
+        tooltipContent += `<div class="mt-2 small text-muted">Click to view details</div>`;
+        tooltipContent += `</div>`;
+        
+        tooltip.innerHTML = tooltipContent;
+        tooltip.classList.remove('d-none');
+        
+        // Position tooltip
+        const rect = info.el.getBoundingClientRect();
+        tooltip.style.left = (rect.left + window.scrollX + rect.width / 2 - tooltip.offsetWidth / 2) + 'px';
+        tooltip.style.top = (rect.top + window.scrollY - tooltip.offsetHeight - 8) + 'px';
+      },
+      eventMouseLeave: function(info) {
+        tooltip.classList.add('d-none');
+      }
     });
+    
     calendar.render();
   });
 </script>

@@ -65,12 +65,16 @@
         <% if event.bands.any? %>
           <div class="card-text mt-2">
             <strong>Lineup:</strong>
-            <span>
+            <div class="d-flex flex-wrap align-items-center mt-1">
               <% event.bands.each_with_index do |band, index| %>
-                <%= link_to band.name, band_path(band), class: "text-decoration-none" %><!--
-                --><%= index < event.bands.size - 1 ? ", " : "" %>
+                <div class="d-flex align-items-center me-3 mb-1">
+                  <% if band.photo_url.present? %>
+                    <%= image_tag band.photo_url, class: "rounded-circle me-1", style: "width: 24px; height: 24px; object-fit: cover;", alt: band.name %>
+                  <% end %>
+                  <%= link_to band.name, band_path(band), class: "text-decoration-none" %>
+                </div>
               <% end %>
-            </span>
+            </div>
           </div>
         <% else %>
           <p class="card-text text-muted">No bands announced yet</p>
@@ -89,6 +93,17 @@
         <% elsif current_user_admin? && event.approved? %>
           <div class="mt-3">
             <%= button_to "Unapprove", disapprove_event_path(event), method: :patch, class: "btn btn-warning btn-sm", "aria-label": "Mark event #{event.name} as pending approval" %>
+          </div>
+        <% end %>
+
+        <!-- 👇 加在这里，下面是 Hide/Show Again 按钮 -->
+        <% if user_signed_in? %>
+          <div class="mt-3">
+            <% if current_user.hidden_events.include?(event) %>
+              <%= button_to "Show Again", show_again_event_path(event), method: :post, class: "btn btn-secondary btn-sm", "aria-label": "Show event #{event.name} again" %>
+            <% else %>
+              <%= button_to "Hide", hide_event_path(event), method: :post, class: "btn btn-outline-warning btn-sm", "aria-label": "Hide event #{event.name}" %>
+            <% end %>
           </div>
         <% end %>
       </div>
