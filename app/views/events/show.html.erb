@@ -58,9 +58,14 @@
                       <span class="badge bg-primary rounded-pill fs-6 p-2"><%= band_event.set_position || 0 %></span>
                     </div>
                     <div class="col-md-4">
-                      <h5 class="mb-1">
-                        <%= link_to band_event.band.name, band_path(band_event.band), class: "text-decoration-none fw-bold" %>
-                      </h5>
+                      <div class="d-flex align-items-center">
+                        <% if band_event.band.photo_url.present? %>
+                          <%= image_tag band_event.band.photo_url, class: "rounded-circle me-2", style: "width: 40px; height: 40px; object-fit: cover;", alt: band_event.band.name %>
+                        <% end %>
+                        <h5 class="mb-1">
+                          <%= link_to band_event.band.name, band_path(band_event.band), class: "text-decoration-none fw-bold" %>
+                        </h5>
+                      </div>
                     </div>
                     <div class="col-md-6">
                       <% if band_event.start_time.present? %>
@@ -131,7 +136,7 @@
       </div>
       
       <div class="mt-4 btn-group">
-        <%= link_to "Back to all events", events_path, class: "btn btn-outline-light", "aria-label": "Return to events list" %>
+        <%= link_to "Back to all events", events_path, class: "btn", "aria-label": "Return to events list" %>
         <% if current_user_admin? || (@event.submitted_by == current_user) %>
           <%= link_to "Edit Event", edit_event_path(@event), class: "btn btn-primary ms-2", "aria-label": "Edit event #{@event.name}" %>
           <%= button_to "Delete Event", event_path(@event), method: :delete, 

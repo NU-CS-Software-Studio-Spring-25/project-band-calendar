@@ -65,12 +65,16 @@
         <% if event.bands.any? %>
           <div class="card-text mt-2">
             <strong>Lineup:</strong>
-            <span>
+            <div class="d-flex flex-wrap align-items-center mt-1">
               <% event.bands.each_with_index do |band, index| %>
-                <%= link_to band.name, band_path(band), class: "text-decoration-none" %><!--
-                --><%= index < event.bands.size - 1 ? ", " : "" %>
+                <div class="d-flex align-items-center me-3 mb-1">
+                  <% if band.photo_url.present? %>
+                    <%= image_tag band.photo_url, class: "rounded-circle me-1", style: "width: 24px; height: 24px; object-fit: cover;", alt: band.name %>
+                  <% end %>
+                  <%= link_to band.name, band_path(band), class: "text-decoration-none" %>
+                </div>
               <% end %>
-            </span>
+            </div>
           </div>
         <% else %>
           <p class="card-text text-muted">No bands announced yet</p>
