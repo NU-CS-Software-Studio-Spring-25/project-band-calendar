@@ -95,6 +95,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_10_212906) do
     t.boolean "has_bar", default: false
     t.float "latitude"
     t.float "longitude"
+<<<<<<< HEAD
+    t.index ["latitude", "longitude"], name: "index_venues_on_latitude_and_longitude"
+=======
+>>>>>>> 86cf4eea2abdaea33153d5580f2b079fa0df8031
     t.index ["name"], name: "index_venues_on_name", unique: true
   end
 
