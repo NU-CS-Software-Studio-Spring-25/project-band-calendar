@@ -17,6 +17,7 @@
 # * approve      - Approves a submitted event (admin only)
 # * disapprove   - Unapproves an event (admin only)
 #
+require 'prawn'
 class EventsController < ApplicationController
   before_action :authenticate_user!, except: [ :index, :show ]
   before_action :authorize_admin!, only: [ :approve, :disapprove ]
@@ -49,6 +50,9 @@ class EventsController < ApplicationController
     
 
     @events = scope.page(params[:page]).per(3)
+    if user_signed_in?
+      @events = @events.where.not(id: current_user.hidden_events.select(:id))
+    end
 
     respond_to do |format|
       format.html
@@ -160,6 +164,42 @@ class EventsController < ApplicationController
     @event.update(approved: false)
     redirect_to @event, notice: "Event has been unapproved."
   end
+
+  def recent_pdf
+    one_month_ago = 1.month.ago
+    @recent_events = Event.where('date >= ?', one_month_ago).order(:date)
+  
+    pdf = Prawn::Document.new
+    pdf.text "Events in the Past Month", size: 24, style: :bold
+    pdf.move_down 20
+  
+    @recent_events.each do |event|
+      pdf.text "Name: #{event.name}"
+      pdf.text "Date: #{event.date.strftime('%Y-%m-%d')}"
+      pdf.text "Venue: #{event.venue.try(:name)}"
+      pdf.move_down 10
+    end
+  
+    send_data pdf.render,
+              filename: "recent_events.pdf",
+              type: "application/pdf",
+              disposition: "attachment"
+  end
+  
+
+  def hide
+    event = Event.find(params[:id])
+    current_user.user_hidden_events.find_or_create_by(event: event)
+    redirect_to events_path, notice: "Event hidden."
+  end
+  
+  def show_again
+    event = Event.find(params[:id])
+    hidden_event = current_user.user_hidden_events.find_by(event: event)
+    hidden_event&.destroy
+    redirect_to events_path, notice: "Event is now visible."
+  end
+
 
   private
 

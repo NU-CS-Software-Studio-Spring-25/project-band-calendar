@@ -29,6 +29,8 @@ class BandEvent < ApplicationRecord
   # Ensures set_position is a positive integer if provided.
   validates :set_position, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
 
+  validates :notes, length: { maximum: 1000 }
+  
   # Scopes
   # Orders band performances by start time
   scope :ordered_by_time, -> { order(:start_time) }

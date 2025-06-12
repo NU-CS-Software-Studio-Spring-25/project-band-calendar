@@ -82,6 +82,7 @@
                     <%= current_user.email %>
                   </a>
                   <div class="dropdown-menu dropdown-menu-end">
+                    <%= link_to "Download Recent Events PDF", recent_pdf_events_path, target: "_blank", class: "dropdown-item" %>
                     <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "dropdown-item" %>
                   </div>
                 </li>

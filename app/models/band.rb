@@ -20,4 +20,6 @@ class Band < ApplicationRecord
 
   # Validations
   validates :name, presence: true, uniqueness: { case_sensitive: false }
+
+  validates :bio, length: { maximum: 2000 }, allow_blank: true
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_10_212906) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_12_053237) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -54,11 +54,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_10_212906) do
     t.string "venue"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.bigint "venue_id"
+    t.bigint "venue_id", null: false
     t.boolean "approved", default: false
     t.bigint "submitted_by_id"
     t.index ["submitted_by_id"], name: "index_events_on_submitted_by_id"
     t.index ["venue_id"], name: "index_events_on_venue_id"
+  end
+
+  create_table "user_hidden_events", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "event_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_user_hidden_events_on_event_id"
+    t.index ["user_id", "event_id"], name: "index_user_hidden_events_on_user_id_and_event_id", unique: true
+    t.index ["user_id"], name: "index_user_hidden_events_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -103,4 +113,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_10_212906) do
   add_foreign_key "band_events", "events"
   add_foreign_key "events", "users", column: "submitted_by_id"
   add_foreign_key "events", "venues"
+  add_foreign_key "user_hidden_events", "events"
+  add_foreign_key "user_hidden_events", "users"
 end

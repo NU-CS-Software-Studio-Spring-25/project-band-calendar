@@ -32,4 +32,8 @@ class User < ApplicationRecord
   def admin?
     admin
   end
+
+
+  has_many :user_hidden_events, dependent: :destroy
+  has_many :hidden_events, through: :user_hidden_events, source: :event
 end

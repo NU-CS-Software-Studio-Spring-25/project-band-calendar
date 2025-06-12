@@ -91,6 +91,17 @@
             <%= button_to "Unapprove", disapprove_event_path(event), method: :patch, class: "btn btn-warning btn-sm", "aria-label": "Mark event #{event.name} as pending approval" %>
           </div>
         <% end %>
+
+        <!-- 👇 加在这里，下面是 Hide/Show Again 按钮 -->
+        <% if user_signed_in? %>
+          <div class="mt-3">
+            <% if current_user.hidden_events.include?(event) %>
+              <%= button_to "Show Again", show_again_event_path(event), method: :post, class: "btn btn-secondary btn-sm", "aria-label": "Show event #{event.name} again" %>
+            <% else %>
+              <%= button_to "Hide", hide_event_path(event), method: :post, class: "btn btn-outline-warning btn-sm", "aria-label": "Hide event #{event.name}" %>
+            <% end %>
+          </div>
+        <% end %>
       </div>
     </div>
   <% end %>
